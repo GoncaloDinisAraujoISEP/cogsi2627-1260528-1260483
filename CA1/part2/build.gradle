@@ -52,8 +52,11 @@ tasks.named('test') {
 }
 
 tasks.named('javadoc') {
+    title = 'Bookstore API'
     failOnError = false
     options.memberLevel = JavadocMemberLevel.PRIVATE
+    options.encoding = 'UTF-8'
+    options.links('https://docs.oracle.com/en/java/javase/17/docs/api/')
 }
 
 //---- deployToDev ----
@@ -87,7 +90,7 @@ tasks.register('copyConfigToDev', Copy) {
     into deployDir
     doFirst {
        filter(ReplaceTokens, tokens: [
-           projectVersion: project.version.toString(),
+           projectVersion: projectVersion,
            buildTimestamp: java.time.Instant.now().toString()
        ])
     }
@@ -123,6 +126,21 @@ sourceSets {
     integrationTest {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+    }
+}
+
+tasks.register('printSourceSetInfo') {
+    group = 'help'
+    description = "Prints details about the project's source sets."
+    notCompatibleWithConfigurationCache('Lê o modelo do projeto durante a execução')
+    doLast {
+        sourceSets.configureEach { srcSet ->
+            println "[${srcSet.name}]"
+            println "--> Source directories: ${srcSet.allJava.srcDirs}"
+            println "--> Output directories: ${srcSet.output.classesDirs.files}"
+            println "--> Compile classpath: ${srcSet.compileClasspath.files}"
+            println "--> Runtime classpath: ${srcSet.runtimeClasspath.files}\n"
+        }
     }
 }
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="com.example" module="bookstore" revision="1.0.0"/>
+ 
+    <!-- Equivalent to Maven scopes: compile, runtime, test -->
+    <configurations>
+        <conf name="compile" description="Libraries needed to compile the application"/>
+        <conf name="runtime" extends="compile" description="Libraries needed to run the application"/>
+        <conf name="test" extends="runtime" description="Libraries needed to compile and run the tests"/>
+    </configurations>
+ 
+    <!-- Ivy does not read Spring Boot's BOM, so every version is explicit
+         (the versions the BOM of Spring Boot 3.3.0 would choose) -->
+    <dependencies>
+        <dependency org="org.springframework.boot" name="spring-boot-starter-web"      rev="3.3.0"   conf="compile->default"/>
+        <dependency org="org.springframework.boot" name="spring-boot-starter-data-jpa" rev="3.3.0"   conf="compile->default"/>
+        <dependency org="org.springframework.boot" name="spring-boot-starter-hateoas"  rev="3.3.0"   conf="compile->default"/>
+        <dependency org="org.springframework.boot" name="spring-boot-starter-actuator" rev="3.3.0"   conf="compile->default"/>
+ 
+        <dependency org="com.h2database"           name="h2"                           rev="2.2.224" conf="runtime->default"/>
+ 
+        <dependency org="org.springframework.boot" name="spring-boot-starter-test"     rev="3.3.0"   conf="test->default"/>
+        <dependency org="org.junit.platform"       name="junit-platform-launcher"      rev="1.10.2"  conf="test->default"/>
+    </dependencies>
+</ivy-module>
+ 

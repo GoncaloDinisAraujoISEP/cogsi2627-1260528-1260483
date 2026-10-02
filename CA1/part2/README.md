@@ -187,5 +187,5 @@ The build targets orchestrate compilation, testing, application execution, and b
 
 | Member | No. | Contribution |
 |---|---|---|
-| Gonçalo Dinis Araújo | 1260528 | xx% |
-| Pedro Barbosa | 1260483 | xx% |
+| Gonçalo Dinis Araújo | 1260528 | 50% |
+| Pedro Barbosa | 1260483 | 50% |

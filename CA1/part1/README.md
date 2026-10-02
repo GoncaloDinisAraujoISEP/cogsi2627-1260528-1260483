@@ -5,8 +5,8 @@ Relatório técnico relativo à Parte 1 do Assignment 1 (Build Tools). Implement
 
 | Student Name | Student Number | Contribution (%) |
 | :--- | :--- | :--- |
-| Gonçalo Dinis Araújo | 1260528 | 100% |
-| Pedro Barbosa | 1260483 | 100% |
+| Gonçalo Dinis Araújo | 1260528 | 50% |
+| Pedro Barbosa | 1260483 | 50% |
 
 ---
 

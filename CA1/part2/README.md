@@ -146,42 +146,37 @@ git push origin ca1-part2
 
 ## Alternative to Gradle
 
-### 1. Comparative Analysis: Gradle vs. Apache Ant (+ Apache Ivy)
+### 1. Analysis
 
-| Dimension | Gradle | Apache Ant + Apache Ivy |
+Maven was excluded (it was the original build). We also considered **Bazel** (too heavy for a single module) and **Mill** (little Spring Boot documentation), and chose **Ant + Ivy**: every requirement maps to a built-in Ant task, and it contrasts clearly with Gradle.
+
+| Dimension | Gradle | Ant + Ivy |
 | :--- | :--- | :--- |
-| **Build Paradigm** | Declarative and convention-based (*Convention over Configuration*), extensible via a concise DSL (Groovy / Kotlin). | Procedural and imperative: every directory layout, compile step, and target must be manually declared in XML (`build.xml`). |
-| **Dependency Management** | Native, automated, and transitive resolution supporting remote repositories (Maven Central, custom registries). | Ant has no built-in dependency management; requires integration with **Apache Ivy** (`ivy.xml`) to retrieve and resolve external artifacts. |
-| **Task Model & Extensibility** | High-level reusable tasks (`Copy`, `Zip`, `JavaExec`) orchestrated via an optimized Directed Acyclic Graph (DAG) with plugin ecosystems. | Extended via explicit XML targets (`<target>`) and core tasks (`<javac>`, `<copy>`, `<zip>`, `<java>`), or custom compiled Java classes extending `org.apache.tools.ant.Task`. |
-| **Performance & Optimization** | Supports incremental builds, build caching, a background daemon, and configuration cache. | More limited build-level optimization: no native persistent daemon, configuration cache, or build output cache; however, individual tasks such as <javac> can perform timestamp-based incremental compilation. |
+| **Paradigm** | Declarative, convention-based DSL (Groovy/Kotlin) | Imperative XML (`build.xml`); every step declared by hand |
+| **Dependencies** | Built in, transitive, with BOM support | Ivy add-on (`ivy.xml`); no BOM, so every version is explicit |
+| **Extensibility** | Tasks (`Copy`, `Zip`, `Exec`) and plugins | `<target>`, `<macrodef>`, or Java classes extending `org.apache.tools.ant.Task` |
+| **Performance** | Incremental builds, build cache, daemon, configuration cache | Only timestamp checks in tasks like `<javac>` and `<copy>` |
+| **Spring Boot** | Official plugin (`bootRun`, `bootJar`) | None: plain jar + libraries on the classpath |
 
----
+### 2. Design
 
-### 2. Design and Implementation of the Alternative Solution
+| Goal | Gradle | Ant + Ivy |
+| :--- | :--- | :--- |
+| Dependencies | `libs.versions.toml` + BOM | `ivy.xml` with `compile`, `runtime`, `test` configurations |
+| Run the app | `bootRun` | `<java fork="true">` |
+| `deployToDev` | `Delete` + 3 `Copy`, `ReplaceTokens` | `<delete>` + 3 `<copy>`, `<filterset>` |
+| `runDist` | `installDist` + `Exec` | `installDist` target with hand-written scripts + `<exec osfamily=...>` |
+| `javadocZip` | `javadoc` + `Zip` | `<javadoc>` + `<zip>` |
+| Integration tests | `integrationTest` source set + `Test` | separate `<javac>` + `<junitlauncher>` |
 
-To replicate the assignment requirements using Ant and Ivy:
+### 3. Implementation and reflection
 
-#### A. Dependency Resolution (`ivy.xml`)
-Apache Ivy handles external dependencies such as the test framework:
-- Declares external dependencies using the `<dependency>` XML element within `ivy.xml`.
-- Downloads and resolves artifacts into a local project cache and library folder (e.g., `lib/`).
-- Resolves transitive dependencies automatically to construct the project classpath.
+Implemented in [`../part2-alternative`](../part2-alternative). Main differences from Gradle:
 
-#### B. Build Lifecycle & Custom Targets (`build.xml`)
-The build targets orchestrate compilation, testing, application execution, and backup distribution:
-
-1. **Compilation & Testing:**
-   - An Ant target invokes Ivy tasks to resolve and retrieve external JAR dependencies into a designated folder (e.g., `lib/`).
-   - The `<javac>` task compiles Java sources from `src/` targeting a `build/classes` output folder using the retrieved classpath.
-   - A `<junit>` / `<java>` task executes the automated test suite against compiled classes.
-
-2. **Server Execution (`runServer`):**
-   - Configured via `<java fork="true" classname="org.example.ChatServerApp">`.
-   - Accepts custom port arguments via properties, defaulting to port 59001 (e.g., `ant runServer -DserverPort=59002`).
-
-3. **Backup and Packaging Pipeline (`zipBackup`):**
-   - **`backupSources` Target:** Uses `<copy todir="build/backup">` to clone source trees from `src/`.
-   - **`zipBackup` Target:** Declares `depends="backupSources"` and executes `<zip destfile="build/distributions/sources-backup.zip" basedir="build/backup"/>` to produce the source archive deterministically.
+- **More is written by hand:** folders, classpaths and start scripts that Gradle's plugins provide by convention.
+- **Dependency versions:** without the BOM, keeping versions compatible is our job.
+- **Spring Boot:** without its plugin we had to add the `-parameters` compiler flag (for `@PathVariable`) and the manifest `Class-Path`; there's no fat jar.
+- **Simpler in some places:** Ant re-reads the build on every run, so `<tstamp>` is always current, while Gradle's configuration cache forced the filter into `doFirst`.
 
 ## Self-assessment
 

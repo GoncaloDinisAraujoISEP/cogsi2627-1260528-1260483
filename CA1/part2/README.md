@@ -133,6 +133,7 @@ The test, [`src/integrationTest/java/com/example/bookstore/BookApiIT.java`](src/
 
 ```bash
 ./gradlew integrationTest
+xdg-open build/reports/tests/integrationTest/index.html
 ```
 
 <img width="917" height="530" alt="image" src="https://github.com/user-attachments/assets/4beb892e-0a46-499a-a9bd-11d0d030f7d7" />

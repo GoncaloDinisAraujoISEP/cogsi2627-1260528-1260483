@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
     vb.name   = "cogsi-ca2-part1"
     vb.cpus   = 2
     vb.memory = 4096
+	vb.customize ["modifyvm", :id, "--cable-connected1", "on"]
   end
 
   # Access from the Windows host

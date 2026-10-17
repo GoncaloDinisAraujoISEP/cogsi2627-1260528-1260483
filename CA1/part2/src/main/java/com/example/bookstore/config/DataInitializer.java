@@ -30,7 +30,7 @@ public class DataInitializer {
             OrderRepository orderRepo
     ) {
         return args -> {
-
+			if (bookRepo.count() > 0) return;
             // Books
             Book book1 = new Book();
             book1.setTitle("Clean Code");

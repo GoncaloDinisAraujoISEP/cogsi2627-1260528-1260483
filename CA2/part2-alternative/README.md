@@ -23,7 +23,7 @@ Para superar esta limitação técnica sem comprometer os requisitos da alternat
 Para reproduzir a solução de forma totalmente automatizada a partir da raiz da pasta `CA2/part2-alternative/`:
 
 ### 2.1. Execução Automática em Comando Único (One-Command)
-Para lançar e configurar todo o cluster sem qualquer intervenção manual, execute o script de orquestração fornecido:
+Ao contrário do Vagrant, onde os IPs privados são estáticos e determinísticos, no ecossistema Cloud-Init/LXD os nós recebem endereços atribuídos por DHCP dinamicamente. Isso criava um impasse arquitetural: como fechar a firewall UFW do db e configurar o proxy_pass do Nginx sem saber previamente os endereços IP atribuídos a cada nó? A resposta da equipa foi a conceção do script de orquestração up.sh. Este script orquestra o ciclo de vida completo do cluster, captura dinamicamente a topologia de rede em tempo de execução e injeta as regras de firewall e de proxy antes de validar o arranque da aplicação no endpoint /health com polling ativo. Para lançar e configurar todo o cluster sem qualquer intervenção manual, execute o script de orquestração fornecido:
 
 ```bash
 cd CA2/part2-alternative

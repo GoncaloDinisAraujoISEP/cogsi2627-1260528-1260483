@@ -115,4 +115,15 @@ Durante a implementação prática da arquitetura alternativa, identificaram-se 
 1. **Dependência de Virtualização por Hardware (KVM):** Ao tentar executar VMs completas com Multipass dentro de uma máquina virtual convidada sem *nested virtualization* ativada, o arranque falha pela ausência de `/dev/kvm`. O recurso a contentores LXD permitiu ultrapassar esta barreira sem desvirtuar o paradigma declarativo do Cloud-Init.
 2. **Resolução de Nomes e Ordem de Provisionamento:** O Vagrant oferece mecanismos síncronos e redes privadas estáticas previsíveis. No modelo com Cloud-Init e IPs atribuídos via DHCP, a resolução interna e as regras de firewall dependem da injeção dinâmica de endereços em tempo de execução, garantida pelo script de orquestração `up.sh`.
 
-Em conclusão, o **Vagrant** permanece a ferramenta de eleição para fluxos de desenvolvimento local que exigem redes privadas fixas previsíveis e suporte multi-SO, enquanto a abordagem assente em **Cloud-Init** aproxima o ambiente de desenvolvimento das práticas modernas de automação em infraestruturas *Cloud Native*.
+Em conclusão, o **Vagrant** permanece a ferramenta de eleição par
+a fluxos de desenvolvimento local que exigem redes privadas fixas previsíveis e suporte multi-SO, enquanto a abordagem assente em **Cloud-Init** aproxima o ambiente de desenvolvimento das práticas modernas de automação em infraestruturas *Cloud Native*.
+
+
+## 6. Autoavaliação e Contribuição da Equipa
+
+Em conformidade com os critérios de avaliação da unidade curricular, a distribuição percentual do esforço e contributo dos elementos da equipa foi a seguinte:
+
+| Número Mecanográfico | Nome do Estudante | Contribuição (%) |
+| :---: | :--- | :---: |
+| 1260528 | Gonçalo Dinis Araújo | 50% |
+| 1260483 | Pedro Barbosa | 50% |

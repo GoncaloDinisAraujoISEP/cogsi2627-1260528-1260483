@@ -1,0 +1,33 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - openjdk-17-jdk-headless
+  - git
+
+write_files:
+  - path: /etc/systemd/system/bookstore.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Bookstore Spring Boot Application
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ubuntu
+      WorkingDirectory=/home/ubuntu/app
+      ExecStart=/home/ubuntu/app/gradlew bootRun
+      Restart=always
+      RestartSec=10
+      Environment="SPRING_DATASOURCE_URL=jdbc:h2:tcp://db:9092/mem:bookstore"
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - git clone https://github.com/GoncaloDinisAraujoISEP/cogsi2627-1260528-1260483.git /tmp/repo
+  - cp -r /tmp/repo/CA1/part2 /home/ubuntu/app
+  - chown -R ubuntu:ubuntu /home/ubuntu/app
+  - chmod +x /home/ubuntu/app/gradlew

@@ -64,10 +64,8 @@ Conforme as boas práticas de segurança em redes privadas, a base de dados não
 * Negação de todo o tráfego de entrada por defeito (`default deny incoming`).
 * Abertura estrita da porta TCP `9092` **apenas** para o IP de origem `192.168.56.11` (nó `app`).
 
-```text
-<!-- PLACEHOLDER 1: Inserir print do comando "sudo ufw status verbose" executado no nó db, comprovando o status ativo e a regra da porta 9092 restrita unicamente a 192.168.56.11 -->
-![Evidência Firewall UFW no nó DB](docs/screenshots/ufw_db_status.png)
-```
+<img width="951" height="245" alt="image" src="https://github.com/user-attachments/assets/e2e16814-54aa-4e9b-a3b1-a0faa6b756ea" />
+
 
 ### 2.3. Provisionamento da Aplicação e Health Check de Rede (`app`)
 A aplicação Spring Boot Bookstore depende diretamente da base de dados H2 remota. Se a aplicação arrancar antes do serviço H2 estar pronto para escutar conexões TCP, o Hibernate falha a inicialização do `EntityManagerFactory`.
@@ -96,10 +94,8 @@ A orquestração do cluster foi validada através da CLI do Vagrant a partir do 
 vagrant status
 ```
 
-```text
-<!-- PLACEHOLDER 2: Inserir print do comando "vagrant status" no PowerShell do Windows, mostrando os 3 nós (db, app, proxy) no estado "running (virtualbox)" -->
-![Estado das VMs via Vagrant](docs/screenshots/vagrant_status.png)
-```
+<img width="700" height="212" alt="image" src="https://github.com/user-attachments/assets/43c35386-08b2-47dd-ba41-d0dd6ef3c64e" />
+
 
 ### 3.2. Acesso à API REST através do Navegador Host
 O acesso à solução é efetuado a partir do browser da máquina anfitriã através de `http://localhost:8080`.
@@ -107,18 +103,14 @@ O acesso à solução é efetuado a partir do browser da máquina anfitriã atra
 1. **Endpoint Raiz (HAL JSON Catalog):**
    Ao aceder à raiz, o Reverse Proxy recebe o pedido na porta `8080` mapeada, entrega-o à `app` e esta devolve o catálogo oficial HATEOAS com os hiperlinks de navegação (`_links`).
 
-```text
-<!-- PLACEHOLDER 3: Inserir print do browser em http://localhost:8080 exibindo o catálogo JSON com os links para /books, /clients, /orders, etc. -->
-![Endpoint Raiz HAL JSON](docs/screenshots/browser_root_hal.png)
-```
+<img width="463" height="555" alt="image" src="https://github.com/user-attachments/assets/c1e20320-5ddb-41e9-ae5f-c1ff867fc661" />
+
 
 2. **Endpoint de Recursos de Negócio (`/books`):**
    Acedendo a `http://localhost:8080/books`, valida-se o ciclo completo da arquitetura: o browser contacta o Nginx (`proxy`), que contacta a Bookstore (`app`), que consulta as tabelas de entidades no servidor H2 (`db`).
 
-```text
-<!-- PLACEHOLDER 4: Inserir print do browser em http://localhost:8080/books mostrando o payload JSON dos livros devolvido pela BD -->
-![Endpoint de Recursos Books](docs/screenshots/browser_books_endpoint.png)
-```
+<img width="392" height="373" alt="image" src="https://github.com/user-attachments/assets/77570eb7-8808-4c85-8bda-26782c91b39c" />
+
 
 ---
 

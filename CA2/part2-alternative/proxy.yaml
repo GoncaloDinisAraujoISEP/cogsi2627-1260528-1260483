@@ -1,22 +1,26 @@
 #cloud-config
 package_update: true
-package_upgrade: false
-
 packages:
   - nginx
 
 write_files:
   - path: /etc/nginx/sites-available/reverse-proxy
-    permissions: '0644'
     content: |
       server {
-          listen 80;
-          server_name _;
+          listen 80 default_server;
+          listen [::]:80 default_server;
 
           location / {
-              proxy_pass http://app:8080;
+              proxy_pass http://10.148.196.180:8080;
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
           }
       }
+
+runcmd:
+  - rm -f /etc/nginx/sites-enabled/default
+  - ln -sf /etc/nginx/sites-available/reverse-proxy /etc/nginx/sites-enabled/
+  - nginx -t
+  - systemctl restart nginx

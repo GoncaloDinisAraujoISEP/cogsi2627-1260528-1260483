@@ -1,0 +1,38 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - openjdk-17-jdk-headless
+  - ufw
+  - curl
+
+write_files:
+  - path: /etc/systemd/system/h2.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=H2 Database Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ubuntu
+      ExecStart=/usr/bin/java -cp /opt/h2/h2.jar org.h2.tools.Server -tcp -tcpAllowOthers -tcpPort 9092 -ifNotExists
+      Restart=always
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - mkdir -p /opt/h2
+  - curl -sLo /opt/h2/h2.jar https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar
+  - chown -R ubuntu:ubuntu /opt/h2
+  - systemctl daemon-reload
+  - systemctl enable --now h2.service
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 22/tcp
+  - ufw allow 9092/tcp
+  - ufw --force enable

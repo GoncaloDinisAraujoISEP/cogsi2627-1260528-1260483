@@ -32,3 +32,22 @@ Durante a implementação prática sob o sistema operativo Windows com hiperviso
 2. **Latência de Provisionamento em CLI:** Tarefas de descarregamento e compilação de binários pesados (como o JDK e o repositório aplicacional) no arranque inicial excedem com frequência os tempos de espera síncronos da CLI do Multipass, evidenciando que o Vagrant oferece uma gestão de estado de provisionamento mais resiliente para fluxos de desenvolvimento local.
 
 A conclusão técnica demonstra que o **Vagrant** permanece a ferramenta superior para a orquestração de ambientes multi-nó locais que requerem redes privadas fixas previsíveis, enquanto o **Multipass** se destaca em prototipagem rápida e validação de manifestos de cloud públicos.
+
+
+lxc list (lista de instancias de clusters)
+<img width="955" height="208" alt="image" src="https://github.com/user-attachments/assets/7aee1928-f84a-4733-9219-34dd9916d8b4" />
+
+
+
+Provisionamento concluído via Cloud-Init
+<img width="865" height="132" alt="image" src="https://github.com/user-attachments/assets/ea208f52-cf49-42cf-b3aa-2361ca0623a3" />
+
+Resposta da Bookstore através do Proxy Reverso
+<img width="2024" height="170" alt="image" src="https://github.com/user-attachments/assets/56e13d4a-1c1e-4de0-89e0-a9455c145e7a" />
+
+
+Consulta de dados na base de dados (/books)
+<img width="1206" height="279" alt="image" src="https://github.com/user-attachments/assets/799c87a2-d37a-4ef3-a6d6-44f3726c3a6b" />
+
+Endpoint de saúde (/health)
+<img width="856" height="175" alt="image" src="https://github.com/user-attachments/assets/d5f75672-6b1b-4188-8dae-1ddb94bafaf9" />

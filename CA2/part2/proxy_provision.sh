@@ -9,7 +9,7 @@ chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 echo "=== [PROXY] Instalar Nginx ==="
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
-apt-get install -y nginx
+apt-get install -y nginx netcat-openbsd
 
 echo "=== [PROXY] Configurar Reverse Proxy para a VM APP ==="
 cat << 'EOF' > /etc/nginx/sites-available/default
@@ -28,4 +28,11 @@ server {
 EOF
 
 nginx -t
+
+echo "=== [PROXY] Aguardar pela Bookstore App (192.168.56.11:8080) ==="
+until nc -z -w5 192.168.56.11 8080; do
+    echo "A aguardar pela Bookstore App estar online..."
+    sleep 3
+done
+
 systemctl restart nginx

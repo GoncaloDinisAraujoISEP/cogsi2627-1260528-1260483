@@ -83,6 +83,11 @@ A aplicação Spring Boot Bookstore depende diretamente da base de dados H2 remo
 ### 2.4. Integração do Reverse Proxy Nginx (`proxy`)
 O nó `proxy` foi provisionado com Nginx, atuando como *gateway* de entrada do cluster. Foi configurado um bloco de servidor para redirecionar todas as requisições HTTP recebidas na porta `80` para a instância interna do Spring Boot em `http://192.168.56.11:8080`, preservando os cabeçalhos HTTP (`Host`, `X-Real-IP`, `X-Forwarded-For`).
 
+* **Health Check e Resiliência de Arranque:**
+Para mitigar condições de corrida (*race conditions*) durante o provisionamento sequencial (`vagrant up`) e prevenir erros transitórios de `502 Bad Gateway`, foi incorporado um ciclo ativo com `netcat` no `proxy_provision.sh`. O serviço Nginx só é reiniciado após a porta TCP `8080` do nó `app` (`192.168.56.11`) se encontrar totalmente aberta e a responder. Adicionalmente, procedeu-se ao ajuste equilibrado dos recursos no `Vagrantfile` (`db`: 1024MB/1CPU, `app`: 2048MB/2CPUs, `proxy`: 512MB/1CPU) e à definição de `boot_timeout = 800` para acomodar o tempo de compilação da aplicação Spring Boot.
+
+---
+
 ---
 
 ## 3. Validação e Testes do Ambiente

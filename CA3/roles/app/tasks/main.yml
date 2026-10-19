@@ -60,3 +60,12 @@
     name: springapp
     state: restarted
     enabled: yes
+
+- name: Health check - Verify Spring Boot application is responding on port 8080
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8080/books
+    status_code: 200
+  register: app_result
+  until: app_result.status == 200
+  retries: 15
+  delay: 4

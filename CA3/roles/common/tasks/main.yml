@@ -4,12 +4,34 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Install baseline packages
+- name: Install baseline packages and PAM quality tools
   ansible.builtin.apt:
     name:
       - curl
-      - wget
       - git
-      - ufw
-      - htop
+      - libpam-pwquality
+    state: present
+
+- name: Configure password complexity in pwquality.conf (12 chars, 3 classes)
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: "^#?\\s*{{ item.param }}\\s*="
+    line: "{{ item.param }} = {{ item.val }}"
+    state: present
+  loop:
+    - { param: 'minlen', val: '12' }
+    - { param: 'minclass', val: '3' }
+
+- name: Configure password history in PAM common-password (remember last 5)
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/common-password
+    regexp: '^(password\s+requisite\s+pam_pwquality.so)(.*remember=\d+)?(.*)$'
+    line: '\1\3 remember=5'
+    backrefs: yes
+
+- name: Configure account lockout after 5 failed attempts for 10 minutes in common-auth
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/common-auth
+    line: "auth required pam_faillock.so preauth silent audit deny=5 unlock_time=600"
+    insertbefore: "^auth.*pam_unix.so"
     state: present

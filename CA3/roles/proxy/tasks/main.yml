@@ -40,3 +40,9 @@
     name: nginx
     state: restarted
     enabled: yes
+
+
+- name: Health check - Verify Nginx reverse proxy routes to Bookstore API
+  ansible.builtin.uri:
+    url: http://127.0.0.1/books
+    status_code: 200

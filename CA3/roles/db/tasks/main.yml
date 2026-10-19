@@ -4,27 +4,19 @@
     name: developers
     state: present
 
-- name: Create devuser and add to developers group
+- name: Create devuser
   ansible.builtin.user:
     name: devuser
     group: developers
     shell: /bin/bash
     state: present
 
-- name: Install OpenJDK (Java 17) for H2 Database
+- name: Install OpenJDK 17
   ansible.builtin.apt:
-    name: openjdk-17-jre-headless
+    name: openjdk-17-jdk-headless
     state: present
 
-- name: Create directory for H2 database restricted to developers
-  ansible.builtin.file:
-    path: /opt/h2
-    state: directory
-    owner: devuser
-    group: developers
-    mode: '0770'
-
-- name: Create database data directory restricted to developers
+- name: Create directory for H2 database
   ansible.builtin.file:
     path: /opt/h2/data
     state: directory
@@ -38,9 +30,19 @@
     dest: /opt/h2/h2.jar
     owner: devuser
     group: developers
-    mode: '0644'
+    mode: '0750'
 
-- name: Create systemd service for H2 server
+- name: Ensure H2 database file exists with correct permissions
+  ansible.builtin.file:
+    path: /opt/h2/data/appdb.mv.db
+    state: touch
+    owner: devuser
+    group: developers
+    mode: '0660'
+    modification_time: preserve
+    access_time: preserve
+
+- name: Create systemd service for H2 Database
   ansible.builtin.copy:
     dest: /etc/systemd/system/h2.service
     content: |
@@ -63,8 +65,14 @@
   ansible.builtin.systemd:
     daemon_reload: yes
 
-- name: Enable and restart H2 service
+- name: Enable and start H2 service
   ansible.builtin.systemd:
     name: h2
-    state: restarted
+    state: started
     enabled: yes
+
+- name: Health check - Verify H2 port 9092 is listening
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 9092
+    timeout: 30

@@ -1,0 +1,70 @@
+---
+- name: Create developers group
+  ansible.builtin.group:
+    name: developers
+    state: present
+
+- name: Create devuser and add to developers group
+  ansible.builtin.user:
+    name: devuser
+    group: developers
+    shell: /bin/bash
+    state: present
+
+- name: Install OpenJDK (Java 17) for H2 Database
+  ansible.builtin.apt:
+    name: openjdk-17-jre-headless
+    state: present
+
+- name: Create directory for H2 database restricted to developers
+  ansible.builtin.file:
+    path: /opt/h2
+    state: directory
+    owner: devuser
+    group: developers
+    mode: '0770'
+
+- name: Create database data directory restricted to developers
+  ansible.builtin.file:
+    path: /opt/h2/data
+    state: directory
+    owner: devuser
+    group: developers
+    mode: '0770'
+
+- name: Download H2 Database JAR
+  ansible.builtin.get_url:
+    url: https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar
+    dest: /opt/h2/h2.jar
+    owner: devuser
+    group: developers
+    mode: '0644'
+
+- name: Create systemd service for H2 server
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/h2.service
+    content: |
+      [Unit]
+      Description=H2 Database Server
+      After=network.target
+
+      [Service]
+      User=devuser
+      Group=developers
+      WorkingDirectory=/opt/h2
+      ExecStart=/usr/bin/java -cp /opt/h2/h2.jar org.h2.tools.Server -tcp -tcpAllowOthers -tcpPort 9092 -web -webAllowOthers -webPort 8082 -baseDir /opt/h2/data
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Enable and restart H2 service
+  ansible.builtin.systemd:
+    name: h2
+    state: restarted
+    enabled: yes

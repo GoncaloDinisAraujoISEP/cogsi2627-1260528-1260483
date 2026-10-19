@@ -1,0 +1,62 @@
+---
+- name: Create developers group
+  ansible.builtin.group:
+    name: developers
+    state: present
+
+- name: Create devuser and add to developers group
+  ansible.builtin.user:
+    name: devuser
+    group: developers
+    shell: /bin/bash
+    state: present
+
+- name: Install OpenJDK 17
+  ansible.builtin.apt:
+    name: openjdk-17-jdk-headless
+    state: present
+
+- name: Create app directory restricted to developers
+  ansible.builtin.file:
+    path: /opt/app
+    state: directory
+    owner: devuser
+    group: developers
+    mode: '0770'
+
+- name: Copy Spring Boot JAR to app VM
+  ansible.builtin.copy:
+    src: app.jar
+    dest: /opt/app/app.jar
+    owner: devuser
+    group: developers
+    mode: '0750'
+
+- name: Create systemd service for Spring Boot application
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/springapp.service
+    content: |
+      [Unit]
+      Description=Bookstore Spring Boot Application
+      After=network.target
+
+      [Service]
+      User=devuser
+      Group=developers
+      WorkingDirectory=/opt/app
+      ExecStart=/usr/bin/java -jar /opt/app/app.jar --spring.datasource.url=jdbc:h2:tcp://192.168.56.11:9092/appdb --spring.datasource.username=sa --spring.datasource.password= --spring.jpa.hibernate.ddl-auto=update
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Enable and restart Spring Boot service
+  ansible.builtin.systemd:
+    name: springapp
+    state: restarted
+    enabled: yes

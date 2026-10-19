@@ -1,0 +1,24 @@
+---
+- name: Apply common configuration to all nodes
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Setup Database Server
+  hosts: db
+  become: true
+  roles:
+    - db
+
+- name: Setup Application Server
+  hosts: app
+  become: true
+  roles:
+    - app
+
+- name: Setup Reverse Proxy
+  hosts: proxy
+  become: true
+  roles:
+    - proxy

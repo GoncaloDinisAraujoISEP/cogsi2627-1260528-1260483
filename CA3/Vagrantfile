@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-24.04"
+  config.ssh.insert_key = false
 
   # VM da Base de Dados (H2)
   config.vm.define "db" do |db|

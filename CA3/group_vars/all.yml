@@ -1,0 +1,10 @@
+---
+# Shared variables. The passwords are kept here in plain text to keep the
+# assignment reproducible; in a real deployment this file would be encrypted
+# with ansible-vault (ansible-vault encrypt group_vars/all.yml).
+db_host: 192.168.56.11
+db_user: sa
+db_password: "Bookstore#Db2026"
+
+devuser_password: "Developer#Pass2026"
+devuser_password_salt: ca3devusersalt

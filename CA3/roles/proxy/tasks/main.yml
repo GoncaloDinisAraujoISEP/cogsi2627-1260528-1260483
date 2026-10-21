@@ -4,19 +4,20 @@
     name: nginx
     state: present
 
-- name: Remove default Nginx site configuration
+- name: Remove the default site
   ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
     state: absent
+  notify: Reload nginx
 
-- name: Configure Nginx reverse proxy for Bookstore application
+- name: Configure the Bookstore site as a reverse proxy to the app VM
   ansible.builtin.copy:
     dest: /etc/nginx/sites-available/bookstore
+    mode: "0644"
     content: |
       server {
           listen 80 default_server;
           listen [::]:80 default_server;
-
           server_name _;
 
           location / {
@@ -27,22 +28,30 @@
               proxy_set_header X-Forwarded-Proto $scheme;
           }
       }
-    mode: '0644'
+  notify: Reload nginx
 
-- name: Enable Bookstore site in Nginx
+- name: Enable the Bookstore site
   ansible.builtin.file:
     src: /etc/nginx/sites-available/bookstore
     dest: /etc/nginx/sites-enabled/bookstore
     state: link
+  notify: Reload nginx
 
-- name: Enable and restart Nginx service
+- name: Enable and start Nginx
   ansible.builtin.systemd:
     name: nginx
-    state: restarted
-    enabled: yes
+    state: started
+    enabled: true
 
+- name: Apply pending reloads before the health check
+  ansible.builtin.meta: flush_handlers
 
-- name: Health check - Verify Nginx reverse proxy routes to Bookstore API
+- name: Health check - Nginx forwards /books to the Bookstore
   ansible.builtin.uri:
     url: http://127.0.0.1/books
-    status_code: 200
+    return_content: true
+  register: proxy_check
+  until: proxy_check.status == 200 and 'title' in (proxy_check.content | default(''))
+  retries: 10
+  delay: 3
+  failed_when: proxy_check.status != 200 or 'title' not in (proxy_check.content | default(''))

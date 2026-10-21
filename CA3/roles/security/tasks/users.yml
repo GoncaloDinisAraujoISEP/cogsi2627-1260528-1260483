@@ -1,0 +1,15 @@
+---
+- name: Create developers group
+  ansible.builtin.group:
+    name: developers
+    state: present
+
+- name: Create devuser with developers as its group
+  ansible.builtin.user:
+    name: devuser
+    group: developers
+    shell: /bin/bash
+    password: "{{ devuser_password | password_hash('sha512', devuser_password_salt) }}"
+    update_password: on_create
+    state: present
+  no_log: true

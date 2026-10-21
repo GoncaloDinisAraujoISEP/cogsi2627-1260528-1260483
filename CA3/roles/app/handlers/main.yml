@@ -1,0 +1,6 @@
+---
+- name: Restart springapp
+  ansible.builtin.systemd:
+    name: springapp
+    state: restarted
+    daemon_reload: true

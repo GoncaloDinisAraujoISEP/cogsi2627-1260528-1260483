@@ -1,0 +1,36 @@
+---
+- name: Install the PAM password quality module
+  ansible.builtin.apt:
+    name: libpam-pwquality
+    state: present
+
+- name: Password complexity - 12 characters, 3 of the 4 character classes
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^#?\s*{{ item.key }}\s*='
+    line: "{{ item.key }} = {{ item.value }}"
+  loop:
+    - { key: minlen, value: 12 }
+    - { key: minclass, value: 3 }
+
+- name: Account lockout - 5 failed attempts, locked for 10 minutes
+  ansible.builtin.lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^#?\s*{{ item.key }}\s*='
+    line: "{{ item.key }} = {{ item.value }}"
+  loop:
+    - { key: deny, value: 5 }
+    - { key: unlock_time, value: 600 }
+
+- name: Install PAM stacks with password history (pwhistory) and lockout (faillock)
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/pam.d/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+    backup: true
+  loop:
+    - common-password
+    - common-auth
+    - common-account

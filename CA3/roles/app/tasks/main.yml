@@ -1,40 +1,44 @@
 ---
-- name: Create developers group
-  ansible.builtin.group:
-    name: developers
-    state: present
-
-- name: Create devuser and add to developers group
-  ansible.builtin.user:
-    name: devuser
-    group: developers
-    shell: /bin/bash
-    state: present
-
 - name: Install OpenJDK 17
   ansible.builtin.apt:
     name: openjdk-17-jdk-headless
     state: present
 
-- name: Create app directory restricted to developers
+- name: Create application directory restricted to developers
   ansible.builtin.file:
     path: /opt/app
     state: directory
     owner: devuser
     group: developers
-    mode: '0770'
+    mode: "0770"
 
-- name: Copy Spring Boot JAR to app VM
+- name: Copy the Bookstore JAR
   ansible.builtin.copy:
     src: app.jar
     dest: /opt/app/app.jar
     owner: devuser
     group: developers
-    mode: '0750'
+    mode: "0750"
+  notify: Restart springapp
 
-- name: Create systemd service for Spring Boot application
+- name: Write database connection settings (contains credentials)
+  ansible.builtin.copy:
+    dest: /etc/springapp.env
+    owner: root
+    group: root
+    mode: "0600"
+    content: |
+      SPRING_DATASOURCE_URL=jdbc:h2:tcp://{{ db_host }}:9092/appdb
+      SPRING_DATASOURCE_USERNAME={{ db_user }}
+      SPRING_DATASOURCE_PASSWORD={{ db_password }}
+      SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  no_log: true
+  notify: Restart springapp
+
+- name: Install systemd unit for the Bookstore
   ansible.builtin.copy:
     dest: /etc/systemd/system/springapp.service
+    mode: "0644"
     content: |
       [Unit]
       Description=Bookstore Spring Boot Application
@@ -44,28 +48,30 @@
       User=devuser
       Group=developers
       WorkingDirectory=/opt/app
-      ExecStart=/usr/bin/java -jar /opt/app/app.jar --spring.datasource.url=jdbc:h2:tcp://192.168.56.11:9092/appdb --spring.datasource.username=sa --spring.datasource.password= --spring.jpa.hibernate.ddl-auto=update
+      EnvironmentFile=/etc/springapp.env
+      ExecStart=/usr/bin/java -jar /opt/app/app.jar
       Restart=always
 
       [Install]
       WantedBy=multi-user.target
-    mode: '0644'
+  notify: Restart springapp
 
-- name: Reload systemd daemon
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
-- name: Enable and restart Spring Boot service
+- name: Enable and start the Bookstore
   ansible.builtin.systemd:
     name: springapp
-    state: restarted
-    enabled: yes
+    state: started
+    enabled: true
+    daemon_reload: true
 
-- name: Health check - Verify Spring Boot application is responding on port 8080
+- name: Apply pending restarts before the health check
+  ansible.builtin.meta: flush_handlers
+
+- name: Health check - /books returns the book list
   ansible.builtin.uri:
     url: http://127.0.0.1:8080/books
-    status_code: 200
-  register: app_result
-  until: app_result.status == 200
-  retries: 15
-  delay: 4
+    return_content: true
+  register: app_check
+  until: app_check.status == 200 and 'title' in (app_check.content | default(''))
+  retries: 20
+  delay: 5
+  failed_when: app_check.status != 200 or 'title' not in (app_check.content | default(''))

@@ -1,23 +1,29 @@
 ---
-- name: Apply common configuration to all nodes
+- name: Common configuration (all VMs)
   hosts: all
   become: true
   roles:
     - common
 
-- name: Setup Database Server
+- name: Developers account and PAM password policy (app and db)
+  hosts: app:db
+  become: true
+  roles:
+    - security
+
+- name: Database server (H2)
   hosts: db
   become: true
   roles:
     - db
 
-- name: Setup Application Server
+- name: Application server (Bookstore)
   hosts: app
   become: true
   roles:
     - app
 
-- name: Setup Reverse Proxy
+- name: Reverse proxy (Nginx)
   hosts: proxy
   become: true
   roles:

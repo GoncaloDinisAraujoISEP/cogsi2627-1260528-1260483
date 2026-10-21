@@ -1,0 +1,6 @@
+---
+- name: Developers group and devuser
+  ansible.builtin.import_tasks: users.yml
+
+- name: PAM password policy
+  ansible.builtin.import_tasks: pam.yml

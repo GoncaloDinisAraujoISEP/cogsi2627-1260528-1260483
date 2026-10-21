@@ -1,50 +1,43 @@
 ---
-- name: Create developers group
-  ansible.builtin.group:
-    name: developers
-    state: present
-
-- name: Create devuser
-  ansible.builtin.user:
-    name: devuser
-    group: developers
-    shell: /bin/bash
-    state: present
-
 - name: Install OpenJDK 17
   ansible.builtin.apt:
     name: openjdk-17-jdk-headless
     state: present
 
-- name: Create directory for H2 database
+- name: Create H2 data directory restricted to developers
   ansible.builtin.file:
     path: /opt/h2/data
     state: directory
     owner: devuser
     group: developers
-    mode: '0770'
+    mode: "0770"
 
-- name: Download H2 Database JAR
+- name: Download H2 2.2.224 (same version as the Bookstore JDBC driver)
   ansible.builtin.get_url:
     url: https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar
     dest: /opt/h2/h2.jar
     owner: devuser
     group: developers
-    mode: '0750'
+    mode: "0750"
+  register: h2_download
+  until: h2_download is succeeded
+  retries: 5
+  delay: 5
 
-- name: Ensure H2 database file exists with correct permissions
+- name: Ensure the H2 database file exists, restricted to developers
   ansible.builtin.file:
     path: /opt/h2/data/appdb.mv.db
     state: touch
     owner: devuser
     group: developers
-    mode: '0660'
+    mode: "0660"
     modification_time: preserve
     access_time: preserve
 
-- name: Create systemd service for H2 Database
+- name: Install systemd unit for H2
   ansible.builtin.copy:
     dest: /etc/systemd/system/h2.service
+    mode: "0644"
     content: |
       [Unit]
       Description=H2 Database Server
@@ -59,20 +52,37 @@
 
       [Install]
       WantedBy=multi-user.target
-    mode: '0644'
+  notify: Restart h2
 
-- name: Reload systemd daemon
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
-- name: Enable and start H2 service
+- name: Enable and start H2
   ansible.builtin.systemd:
     name: h2
     state: started
-    enabled: yes
+    enabled: true
+    daemon_reload: true
 
-- name: Health check - Verify H2 port 9092 is listening
-  ansible.builtin.wait_for:
-    host: 127.0.0.1
-    port: 9092
-    timeout: 30
+- name: Apply pending restarts before the health check
+  ansible.builtin.meta: flush_handlers
+
+- name: Health check - H2 accepts a JDBC connection and answers a query
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/java
+      - -cp
+      - /opt/h2/h2.jar
+      - org.h2.tools.Shell
+      - -url
+      - "jdbc:h2:tcp://127.0.0.1:9092/appdb"
+      - -user
+      - "{{ db_user }}"
+      - -password
+      - "{{ db_password }}"
+      - -sql
+      - SELECT 1
+  register: h2_check
+  until: h2_check.rc == 0
+  retries: 10
+  delay: 3
+  changed_when: false
+  failed_when: h2_check.rc != 0
+  no_log: true

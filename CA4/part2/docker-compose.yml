@@ -21,9 +21,32 @@ services:
       retries: 5
       start_period: 15s
     restart: unless-stopped
+  web:
+    build: ./web
+    image: ${DOCKERHUB_USER}/cogsi-ca4-web:${TAG}
+    environment:
+      SERVER_PORT: ${WEB_PORT}
+      SPRING_DATASOURCE_URL: jdbc:h2:tcp://db:${DB_PORT}/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:${WEB_PORT}/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
 
 volumes:
   h2-data:
 
 networks:
   backend:
+  frontend:

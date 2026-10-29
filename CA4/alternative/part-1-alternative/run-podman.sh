@@ -2,7 +2,7 @@
 set -e
 
 echo "=== 1. Building Chat V3 with Podman (Rootless & Daemonless) ==="
-podman build -f CA4/chat/Dockerfile.v3 -t podman-chat:v3 CA4/chat
+podman build -f CA4/part1/chat/Dockerfile.v3 -t podman-chat:v3 CA4/part1/chat
 
 echo "=== 2. Running Container ==="
 podman run -d --name podman-chat-app -p 59002:59001 podman-chat:v3

@@ -1,6 +1,0 @@
-.git
-.gradle
-bin
-out
-*.log
-!**/build/libs/*.jar

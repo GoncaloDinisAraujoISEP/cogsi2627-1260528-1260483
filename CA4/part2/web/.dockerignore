@@ -1,0 +1,4 @@
+bookstore/build
+bookstore/.gradle
+bookstore/.idea
+bookstore/**/*.md

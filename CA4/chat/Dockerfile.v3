@@ -1,0 +1,16 @@
+FROM gradle:jdk21 AS builder
+WORKDIR /workspace
+COPY . .
+RUN ./gradlew :app:installDist --no-daemon
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+RUN useradd -u 10001 appuser && chown -R appuser:appuser /app
+
+COPY --from=builder --chown=appuser:appuser /workspace/app/build/install/app /app
+
+USER 10001
+
+EXPOSE 59001
+CMD ["java", "-cp", "lib/*", "org.example.ChatServerApp", "59001"]

@@ -1,0 +1,29 @@
+name: ca4-part2
+
+services:
+  db:
+    build: ./db
+    image: ${DOCKERHUB_USER}/cogsi-ca4-db:${TAG}
+    environment:
+      H2_DB_NAME: ${DB_NAME}
+      H2_USER: ${DB_USER}
+      H2_PASSWORD: ${DB_PASSWORD}
+      H2_TCP_PORT: ${DB_PORT}
+      H2_DATA_DIR: /opt/h2-data
+    volumes:
+      - h2-data:/opt/h2-data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "java -cp /opt/h2/h2.jar org.h2.tools.Shell -url \"jdbc:h2:tcp://localhost:$${H2_TCP_PORT}/$${H2_DB_NAME}\" -user \"$${H2_USER}\" -password \"$${H2_PASSWORD}\" -sql 'SELECT 1' > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  h2-data:
+
+networks:
+  backend:

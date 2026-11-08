@@ -406,7 +406,62 @@ docker images | grep -E "chat|bookstore"
 
 ---
 
-## 5. Procedimento de Versionamento no Git
+## 5. Publicação e Utilização no Docker Hub
+
+As imagens de produção (`v1`, `v2` e `v3`) foram etiquetadas e enviadas para o registo público oficial no Docker Hub sob o utilizador `goncalodinisaraujoisep`.
+
+### 5.1 Procedimento de Publicação (Tag & Push)
+Para publicar as imagens construídas localmente no Docker Hub:
+
+```bash
+# 1. Autenticação no Docker Hub
+docker login
+
+# 2. Atribuir a tag com o namespace do repositório remoto
+docker tag chat:v1 goncalodinisaraujoisep/chat-server:v1
+docker tag chat:v2 goncalodinisaraujoisep/chat-server:v2
+docker tag chat:v3 goncalodinisaraujoisep/chat-server:v3
+
+docker tag bookstore:v1 goncalodinisaraujoisep/bookstore:v1
+docker tag bookstore:v2 goncalodinisaraujoisep/bookstore:v2
+docker tag bookstore:v3 goncalodinisaraujoisep/bookstore:v3
+
+# 3. Enviar as imagens para o repositório público
+docker push goncalodinisaraujoisep/chat-server:v1
+docker push goncalodinisaraujoisep/chat-server:v2
+docker push goncalodinisaraujoisep/chat-server:v3
+
+docker push goncalodinisaraujoisep/bookstore:v1
+docker push goncalodinisaraujoisep/bookstore:v2
+docker push goncalodinisaraujoisep/bookstore:v3
+```
+
+### 5.2 Como Obter e Executar (Fetch & Run)
+Qualquer utilizador externo ou avaliador pode descarregar e executar as imagens finais a partir do Docker Hub sem necessitar do código-fonte ou de ambientes Java/Gradle instalados no host:
+
+* **Executar o Chat Server (v3):**
+  ```bash
+  docker pull goncalodinisaraujoisep/chat-server:v3
+  docker run -d --name chat-server -p 59001:59001 goncalodinisaraujoisep/chat-server:v3
+  ```
+
+* **Executar a Bookstore (v3 com injeção de parâmetros H2):**
+  ```bash
+  docker pull goncalodinisaraujoisep/bookstore:v3
+  docker run -d --name bookstore-app -p 8080:8080 \
+    -e SPRING_DATASOURCE_URL="jdbc:h2:mem:bookstoredb;DB_CLOSE_DELAY=-1" \
+    -e SPRING_DATASOURCE_DRIVER_CLASS_NAME="org.h2.Driver" \
+    -e SPRING_DATASOURCE_USERNAME="sa" \
+    -e SPRING_DATASOURCE_PASSWORD="" \
+    -e SPRING_JPA_DATABASE_PLATFORM="org.hibernate.dialect.H2Dialect" \
+    goncalodinisaraujoisep/bookstore:v3
+  ```
+
+---
+
+
+
+## 6. Procedimento de Versionamento no Git
 
 Após validação de todos os passos, a entrega da Parte 1 é concluída na branch dedicada com a respetiva tag:
 

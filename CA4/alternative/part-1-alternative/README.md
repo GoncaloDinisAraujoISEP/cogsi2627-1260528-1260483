@@ -101,8 +101,7 @@ Verify that the container is active and review its state:
 podman ps
 ```
 
-<img width="1191" height="180" alt="image" src="https://github.com/user-attachments/assets/02bcdeef-ca31-42ef-ac77-ffa0e4f3d7cc" />
-
+<img width="1187" height="92" alt="image" src="https://github.com/user-attachments/assets/c664d59d-ed73-471b-a8d8-4c9ca9a611e0" />
 
 ### Step 4: Validate Security and User Namespaces
 
@@ -121,7 +120,8 @@ Expected output:
 uid=10001(appuser) gid=10001(appuser) groups=10001(appuser)
 ```
 
-> **[INSERT SCREENSHOT HERE: podman top and podman run --rm id proving UID 10001 execution]**
+<img width="1092" height="82" alt="image" src="https://github.com/user-attachments/assets/ea613bc2-f0ff-4079-a4a0-2475ba854314" />
+
 
 ### Step 5: Resource Consumption Analysis
 
@@ -131,7 +131,8 @@ Query the container's memory and CPU usage snapshot:
 podman stats podman-chat-app --no-stream
 ```
 
-> **[INSERT SCREENSHOT HERE: podman stats showing memory and CPU usage]**
+<img width="1087" height="52" alt="image" src="https://github.com/user-attachments/assets/6c9d66ca-6294-4a8e-a49d-929f6c269df3" />
+
 
 ### Step 6: Automated Test Execution
 
@@ -142,7 +143,8 @@ chmod +x CA4/alternative/part-1-alternative/run-podman.sh
 ./CA4/alternative/part-1-alternative/run-podman.sh
 ```
 
-> **[INSERT SCREENSHOT HERE: Full execution output of run-podman.sh]**
+<img width="1108" height="773" alt="image" src="https://github.com/user-attachments/assets/7addbcf4-fed8-427b-aa9c-7a6f822693b6" />
+
 
 ---
 

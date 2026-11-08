@@ -31,13 +31,17 @@ CA4/part1/
 
 ### Configuração de Isolamento (.dockerignore)
 
-Ambas as aplicações incluem um ficheiro `.dockerignore` nas respetivas pastas para evitar o envio desnecessário de artefactos pesados e ficheiros sensíveis durante o contexto de build (`docker build`):
+O ficheiro `.dockerignore` funciona como o `.gitignore`: indica ao Docker o que **não deve enviar** para o contexto de build (`docker build`), reduzindo o seu tamanho e evitando incluir ficheiros locais ou sensíveis.
 
-* Exclusão de diretorias de build (`build/`, `.gradle/`, `target/`);
+* **Chat Server (`CA4/part1/chat/.dockerignore`):**
+  * Ignora o histórico Git (`.git`), caches locais do Gradle (`.gradle`), pastas de IDE (`bin`, `out`) e ficheiros de registo (`*.log`).
+  * Mantém a regra `!**/build/libs/*.jar` de forma defensiva, para garantir que o JAR compilado no host está disponível para o `COPY` da `v2`.
 
-* Exclusão de ficheiros de ambiente e chaves locais (`.env`, `*.log`, `.git/` nos contextos locais);
+* **Bookstore (`CA4/part1/bookstore/.dockerignore`):**
+  * Ignora `.git`, `.gradle`, `out`, `*.log` e todo o conteúdo de `build/` (`build/*`).
+  * Abre a exceção `!build/libs/*.jar`, deixando passar apenas o JAR gerado pelo `bootJar`, que é o ficheiro de que a `v2` precisa.
 
-* Redução direta do tempo de transferência de contexto para o daemon Docker.
+> **Nota:** na Bookstore, a exceção `!` permite à `v2` copiar o JAR mesmo com `build/*` excluído, e mantém fora do contexto as classes e relatórios intermédios. Na `v3` (*multi-stage*), o `COPY . .` do estágio `builder` também respeita o `.dockerignore`, pelo que os ficheiros excluídos não entram no estágio de compilação.
 
 ---
 

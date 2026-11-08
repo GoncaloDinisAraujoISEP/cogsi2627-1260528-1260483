@@ -84,7 +84,8 @@ We reuse the secure `Dockerfile.v3` multi-stage specification created in Part 1.
 podman build -f CA4/part1/chat/Dockerfile.v3 -t podman-chat:v3 CA4/part1/chat
 ```
 
-> **[INSERT SCREENSHOT HERE: Podman build execution showing multi-stage compilation without root daemon]**
+<img width="1270" height="261" alt="image" src="https://github.com/user-attachments/assets/b67d26c8-a99b-4ee4-a74d-19ae50d233d2" />
+
 
 ### Step 3: Run the Application in Rootless Mode
 
@@ -100,7 +101,8 @@ Verify that the container is active and review its state:
 podman ps
 ```
 
-> **[INSERT SCREENSHOT HERE: podman ps showing podman-chat-app running with mapped port 59002]**
+<img width="1191" height="180" alt="image" src="https://github.com/user-attachments/assets/02bcdeef-ca31-42ef-ac77-ffa0e4f3d7cc" />
+
 
 ### Step 4: Validate Security and User Namespaces
 

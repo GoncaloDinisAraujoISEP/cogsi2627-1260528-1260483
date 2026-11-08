@@ -408,11 +408,11 @@ Para avaliar o impacto prático de cada estratégia de empacotamento, foram anal
 #### Evidências de Medição no Terminal:
 
 * **Medição de Tempos de Build sem Cache (`real`):**
-  <img width="973" height="233" alt="image" src="https://github.com/user-attachments/assets/1c292053-81ed-4808-bda1-83c5c59e4a6e" />
+   <img width="973" height="233" alt="image" src="https://github.com/user-attachments/assets/1c292053-81ed-4808-bda1-83c5c59e4a6e" />
 
 
 * **Contagem de Camadas (`docker history`):**
- <img width="1280" height="198" alt="image" src="https://github.com/user-attachments/assets/b8ab3e54-034c-4236-9d8f-880775997056" />
+   <img width="1280" height="198" alt="image" src="https://github.com/user-attachments/assets/b8ab3e54-034c-4236-9d8f-880775997056" />
 
 
 * **Tamanhos Finais das Imagens em Disco (`docker images`):**

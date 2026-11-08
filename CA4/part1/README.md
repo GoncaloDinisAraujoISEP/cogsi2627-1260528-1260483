@@ -428,14 +428,14 @@ A inspeção detalhada das camadas evidencia de forma prática o desperdício de
 #### Camadas da Versão v1 (Monolítica):
 Observa-se que apenas a instrução `./gradlew build` introduz 738 MB de dependências e artefactos desnecessários na imagem final:
 
-<!-- COLOCA AQUI O TEU PRINT DO COMANDO "docker history chat:v1" (onde se vê a linha dos 738MB) -->
-![Docker History Chat v1](docs/screenshots/docker-history-chat-v1.png)
+<img width="1025" height="453" alt="image" src="https://github.com/user-attachments/assets/4790b9ab-5589-4ba8-96d2-7cd1416ac972" />
+
 
 #### Camadas da Versão v3 (Multi-Stage):
 No estágio final, a camada que transporta a aplicação (`COPY --from=builder`) ocupa apenas 2.31 MB, sendo executada com restrições explícitas de utilizador (`USER 10001`):
 
-<!-- COLOCA AQUI O TEU PRINT DO COMANDO "docker history chat:v3" (onde se vê a linha dos 2.31MB e USER 10001) -->
-![Docker History Chat v3](docs/screenshots/docker-history-chat-v3.png)
+<img width="1015" height="430" alt="image" src="https://github.com/user-attachments/assets/e9a972f1-f0b8-463b-a2ef-9fefb17cfc0e" />
+
 
 ---
 
@@ -453,8 +453,8 @@ Para comprovar que o contentor executa de forma autónoma e responde a pedidos o
    ```
 3. Foram enviadas mensagens interativas pela aplicação, validando o ciclo de processamento do servidor dentro do contentor.
 
-<!-- COLOCA AQUI O TEU PRINT QUE TEM A JANELA "Chatter - Gonclao" E A TABELA docker stats POR TRÁS -->
-![Evidência de Execução e Monitorização](docs/screenshots/chat-client-stats.png)
+<img width="1000" height="635" alt="image" src="https://github.com/user-attachments/assets/1e872db5-f1d9-4bc8-aad1-2b4b18b42d00" />
+
 
 * **Monitorização em Tempo Real (`docker stats`):**
   Como evidenciado na captura, o contentor opera com estabilidade e consumo de memória contido (~56.59 MiB), sendo a comunicação bidirecional confirmada pelo tráfego contínuo na interface de rede (`NET I/O: 2.04kB / 804B`).

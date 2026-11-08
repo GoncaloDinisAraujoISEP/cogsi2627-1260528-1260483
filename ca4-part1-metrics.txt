@@ -1,0 +1,843 @@
+=== CHAT V1 ===
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v1
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile.v1
+#1 transferring dockerfile: 348B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:17-jdk
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 32B 0.1s
+#3 transferring context: 88B 0.1s done
+#3 DONE 0.1s
+
+#4 [1/6] FROM docker.io/library/eclipse-temurin:17-jdk@sha256:fe947d993c32dd9cf651a4353a6ed723c2370b3a9d034ea4cab4775404ea531a
+#4 resolve docker.io/library/eclipse-temurin:17-jdk@sha256:fe947d993c32dd9cf651a4353a6ed723c2370b3a9d034ea4cab4775404ea531a 0.0s done
+#4 CACHED
+
+#5 [2/6] RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+#5 0.444 Get:1 http://archive.ubuntu.com/ubuntu resolute InRelease [136 kB]
+#5 0.522 Get:2 http://security.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+#5 0.714 Get:3 http://archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+#5 0.861 Get:4 http://archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+#5 1.033 Get:5 http://archive.ubuntu.com/ubuntu resolute/multiverse amd64 Packages [352 kB]
+#5 1.196 Get:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages [20.1 MB]
+#5 1.473 Get:7 http://security.ubuntu.com/ubuntu resolute-security/universe amd64 Packages [261 kB]
+#5 2.027 Get:8 http://security.ubuntu.com/ubuntu resolute-security/multiverse amd64 Packages [24.6 kB]
+#5 2.040 Get:9 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages [805 kB]
+#5 2.774 Get:10 http://security.ubuntu.com/ubuntu resolute-security/restricted amd64 Packages [648 kB]
+#5 5.147 Get:11 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages [1,874 kB]
+#5 5.401 Get:12 http://archive.ubuntu.com/ubuntu resolute/restricted amd64 Packages [189 kB]
+#5 5.437 Get:13 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages [1,041 kB]
+#5 5.643 Get:14 http://archive.ubuntu.com/ubuntu resolute-updates/multiverse amd64 Packages [26.1 kB]
+#5 5.659 Get:15 http://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 Packages [475 kB]
+#5 5.736 Get:16 http://archive.ubuntu.com/ubuntu resolute-updates/restricted amd64 Packages [703 kB]
+#5 5.841 Get:17 http://archive.ubuntu.com/ubuntu resolute-backports/universe amd64 Packages [3,308 B]
+#5 5.871 Fetched 27.1 MB in 6s (4,850 kB/s)
+#5 5.871 Reading package lists...
+#5 6.442 Reading package lists...
+#5 7.071 Building dependency tree...
+#5 7.186 Reading state information...
+#5 7.222 Solving dependencies...
+#5 7.367 The following additional packages will be installed:
+#5 7.367   git-man less libcbor0.10 libcurl3t64-gnutls libedit2 liberror-perl
+#5 7.367   libfido2-1 libgdbm-compat4t64 libgdbm6t64 libperl5.40 libx11-6 libx11-data
+#5 7.367   libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1 netbase openssh-client patch
+#5 7.368   perl perl-modules-5.40 xauth
+#5 7.369 Suggested packages:
+#5 7.369   gettext-base git-doc git-email git-gui gitk gitweb git-cvs git-svn gdbm-l10n
+#5 7.369   keychain libpam-ssh monkeysphere ssh-askpass ed diffutils-doc perl-doc
+#5 7.369   libterm-readline-gnu-perl | libterm-readline-perl-perl make
+#5 7.369   libtap-harness-archive-perl
+#5 7.407 The following NEW packages will be installed:
+#5 7.407   git git-man less libcbor0.10 libcurl3t64-gnutls libedit2 liberror-perl
+#5 7.408   libfido2-1 libgdbm-compat4t64 libgdbm6t64 libperl5.40 libx11-6 libx11-data
+#5 7.408   libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1 netbase openssh-client patch
+#5 7.409   perl perl-modules-5.40 xauth
+#5 7.532 0 upgraded, 24 newly installed, 0 to remove and 10 not upgraded.
+#5 7.532 Need to get 16.6 MB of archives.
+#5 7.532 After this operation, 89.2 MB of additional disk space will be used.
+#5 7.532 Get:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 less amd64 668-1build1 [172 kB]
+#5 7.858 Get:2 http://archive.ubuntu.com/ubuntu resolute/main amd64 libedit2 amd64 3.1-20251016-1 [96.9 kB]
+#5 7.862 Get:3 http://archive.ubuntu.com/ubuntu resolute/main amd64 netbase all 6.5build1 [13.0 kB]
+#5 7.862 Get:4 http://archive.ubuntu.com/ubuntu resolute/main amd64 libcbor0.10 amd64 0.10.2-2ubuntu3 [25.3 kB]
+#5 7.901 Get:5 http://archive.ubuntu.com/ubuntu resolute/main amd64 libfido2-1 amd64 1.16.0-2build1 [84.6 kB]
+#5 8.007 Get:6 http://archive.ubuntu.com/ubuntu resolute/main amd64 libgdbm6t64 amd64 1.26-1build1 [36.5 kB]
+#5 8.009 Get:7 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxau6 amd64 1:1.0.11-1build2 [7,502 B]
+#5 8.009 Get:8 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxdmcp6 amd64 1:1.1.5-2 [10.8 kB]
+#5 8.010 Get:9 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb1 amd64 1.17.0-2ubuntu1 [49.0 kB]
+#5 8.014 Get:10 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libx11-data all 2:1.8.13-1ubuntu0.1 [115 kB]
+#5 8.041 Get:11 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libx11-6 amd64 2:1.8.13-1ubuntu0.1 [658 kB]
+#5 8.380 Get:12 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxext6 amd64 2:1.3.4-1build3 [30.8 kB]
+#5 8.383 Get:13 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxmuu1 amd64 2:1.1.3-4 [9,450 B]
+#5 8.383 Get:14 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 openssh-client amd64 1:10.2p1-2ubuntu3.8 [936 kB]
+#5 8.732 Get:15 http://archive.ubuntu.com/ubuntu resolute/main amd64 xauth amd64 1:1.1.2-1.1build1 [25.7 kB]
+#5 8.738 Get:16 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libcurl3t64-gnutls amd64 8.18.0-1ubuntu2.8 [421 kB]
+#5 8.869 Get:17 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-modules-5.40 all 5.40.1-7ubuntu0.3 [3,212 kB]
+#5 9.734 Get:18 http://archive.ubuntu.com/ubuntu resolute/main amd64 libgdbm-compat4t64 amd64 1.26-1build1 [6,796 B]
+#5 9.734 Get:19 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libperl5.40 amd64 5.40.1-7ubuntu0.3 [4,889 kB]
+#5 10.64 Get:20 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl amd64 5.40.1-7ubuntu0.3 [262 kB]
+#5 10.66 Get:21 http://archive.ubuntu.com/ubuntu resolute/main amd64 liberror-perl all 0.17030-1 [23.5 kB]
+#5 10.66 Get:22 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 git-man all 1:2.53.0-1ubuntu1.1 [1,197 kB]
+#5 10.82 Get:23 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 git amd64 1:2.53.0-1ubuntu1.1 [4,223 kB]
+#5 11.50 Get:24 http://archive.ubuntu.com/ubuntu resolute/main amd64 patch amd64 2.8-2build1 [95.7 kB]
+#5 11.70 debconf: unable to initialize frontend: Dialog
+#5 11.70 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#5 11.70 debconf: falling back to frontend: Readline
+#5 11.70 debconf: unable to initialize frontend: Readline
+#5 11.70 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 24.)
+#5 11.70 debconf: falling back to frontend: Teletype
+#5 11.71 debconf: unable to initialize frontend: Teletype
+#5 11.71 debconf: (This frontend requires a controlling tty.)
+#5 11.71 debconf: falling back to frontend: Noninteractive
+#5 12.26 Fetched 16.6 MB in 4s (4,050 kB/s)
+#5 12.29 Selecting previously unselected package less.
+#5 12.29 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10439 files and directories currently installed.)
+#5 12.33 Preparing to unpack .../00-less_668-1build1_amd64.deb ...
+#5 12.34 Unpacking less (668-1build1) ...
+#5 12.38 Selecting previously unselected package libedit2:amd64.
+#5 12.38 Preparing to unpack .../01-libedit2_3.1-20251016-1_amd64.deb ...
+#5 12.39 Unpacking libedit2:amd64 (3.1-20251016-1) ...
+#5 12.43 Selecting previously unselected package netbase.
+#5 12.43 Preparing to unpack .../02-netbase_6.5build1_all.deb ...
+#5 12.43 Unpacking netbase (6.5build1) ...
+#5 12.47 Selecting previously unselected package libcbor0.10:amd64.
+#5 12.47 Preparing to unpack .../03-libcbor0.10_0.10.2-2ubuntu3_amd64.deb ...
+#5 12.48 Unpacking libcbor0.10:amd64 (0.10.2-2ubuntu3) ...
+#5 12.51 Selecting previously unselected package libfido2-1:amd64.
+#5 12.51 Preparing to unpack .../04-libfido2-1_1.16.0-2build1_amd64.deb ...
+#5 12.52 Unpacking libfido2-1:amd64 (1.16.0-2build1) ...
+#5 12.55 Selecting previously unselected package libgdbm6t64:amd64.
+#5 12.55 Preparing to unpack .../05-libgdbm6t64_1.26-1build1_amd64.deb ...
+#5 12.56 Unpacking libgdbm6t64:amd64 (1.26-1build1) ...
+#5 12.60 Selecting previously unselected package libxau6:amd64.
+#5 12.60 Preparing to unpack .../06-libxau6_1%3a1.0.11-1build2_amd64.deb ...
+#5 12.60 Unpacking libxau6:amd64 (1:1.0.11-1build2) ...
+#5 12.64 Selecting previously unselected package libxdmcp6:amd64.
+#5 12.64 Preparing to unpack .../07-libxdmcp6_1%3a1.1.5-2_amd64.deb ...
+#5 12.64 Unpacking libxdmcp6:amd64 (1:1.1.5-2) ...
+#5 12.68 Selecting previously unselected package libxcb1:amd64.
+#5 12.68 Preparing to unpack .../08-libxcb1_1.17.0-2ubuntu1_amd64.deb ...
+#5 12.69 Unpacking libxcb1:amd64 (1.17.0-2ubuntu1) ...
+#5 12.71 Selecting previously unselected package libx11-data.
+#5 12.71 Preparing to unpack .../09-libx11-data_2%3a1.8.13-1ubuntu0.1_all.deb ...
+#5 12.72 Unpacking libx11-data (2:1.8.13-1ubuntu0.1) ...
+#5 12.77 Selecting previously unselected package libx11-6:amd64.
+#5 12.77 Preparing to unpack .../10-libx11-6_2%3a1.8.13-1ubuntu0.1_amd64.deb ...
+#5 12.78 Unpacking libx11-6:amd64 (2:1.8.13-1ubuntu0.1) ...
+#5 12.82 Selecting previously unselected package libxext6:amd64.
+#5 12.82 Preparing to unpack .../11-libxext6_2%3a1.3.4-1build3_amd64.deb ...
+#5 12.82 Unpacking libxext6:amd64 (2:1.3.4-1build3) ...
+#5 12.86 Selecting previously unselected package libxmuu1:amd64.
+#5 12.86 Preparing to unpack .../12-libxmuu1_2%3a1.1.3-4_amd64.deb ...
+#5 12.87 Unpacking libxmuu1:amd64 (2:1.1.3-4) ...
+#5 12.91 Selecting previously unselected package openssh-client.
+#5 12.91 Preparing to unpack .../13-openssh-client_1%3a10.2p1-2ubuntu3.8_amd64.deb ...
+#5 12.92 Unpacking openssh-client (1:10.2p1-2ubuntu3.8) ...
+#5 12.96 Selecting previously unselected package xauth.
+#5 12.96 Preparing to unpack .../14-xauth_1%3a1.1.2-1.1build1_amd64.deb ...
+#5 12.97 Unpacking xauth (1:1.1.2-1.1build1) ...
+#5 13.01 Selecting previously unselected package libcurl3t64-gnutls:amd64.
+#5 13.01 Preparing to unpack .../15-libcurl3t64-gnutls_8.18.0-1ubuntu2.8_amd64.deb ...
+#5 13.01 Unpacking libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.8) ...
+#5 13.04 Selecting previously unselected package perl-modules-5.40.
+#5 13.05 Preparing to unpack .../16-perl-modules-5.40_5.40.1-7ubuntu0.3_all.deb ...
+#5 13.05 Unpacking perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+#5 13.21 Selecting previously unselected package libgdbm-compat4t64:amd64.
+#5 13.21 Preparing to unpack .../17-libgdbm-compat4t64_1.26-1build1_amd64.deb ...
+#5 13.22 Unpacking libgdbm-compat4t64:amd64 (1.26-1build1) ...
+#5 13.26 Selecting previously unselected package libperl5.40:amd64.
+#5 13.26 Preparing to unpack .../18-libperl5.40_5.40.1-7ubuntu0.3_amd64.deb ...
+#5 13.27 Unpacking libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+#5 13.41 Selecting previously unselected package perl.
+#5 13.41 Preparing to unpack .../19-perl_5.40.1-7ubuntu0.3_amd64.deb ...
+#5 13.41 Unpacking perl (5.40.1-7ubuntu0.3) ...
+#5 13.45 Selecting previously unselected package liberror-perl.
+#5 13.45 Preparing to unpack .../20-liberror-perl_0.17030-1_all.deb ...
+#5 13.46 Unpacking liberror-perl (0.17030-1) ...
+#5 13.49 Selecting previously unselected package git-man.
+#5 13.49 Preparing to unpack .../21-git-man_1%3a2.53.0-1ubuntu1.1_all.deb ...
+#5 13.49 Unpacking git-man (1:2.53.0-1ubuntu1.1) ...
+#5 13.54 Selecting previously unselected package git.
+#5 13.54 Preparing to unpack .../22-git_1%3a2.53.0-1ubuntu1.1_amd64.deb ...
+#5 13.55 Unpacking git (1:2.53.0-1ubuntu1.1) ...
+#5 13.66 Selecting previously unselected package patch.
+#5 13.66 Preparing to unpack .../23-patch_2.8-2build1_amd64.deb ...
+#5 13.67 Unpacking patch (2.8-2build1) ...
+#5 13.71 Setting up libxau6:amd64 (1:1.0.11-1build2) ...
+#5 13.72 Setting up libxdmcp6:amd64 (1:1.1.5-2) ...
+#5 13.74 Setting up libxcb1:amd64 (1.17.0-2ubuntu1) ...
+#5 13.75 Setting up libgdbm6t64:amd64 (1.26-1build1) ...
+#5 13.77 Setting up libgdbm-compat4t64:amd64 (1.26-1build1) ...
+#5 13.79 Setting up libcbor0.10:amd64 (0.10.2-2ubuntu3) ...
+#5 13.80 Setting up libedit2:amd64 (3.1-20251016-1) ...
+#5 13.82 Setting up libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.8) ...
+#5 13.83 Setting up less (668-1build1) ...
+#5 13.86 Setting up libx11-data (2:1.8.13-1ubuntu0.1) ...
+#5 13.87 Setting up patch (2.8-2build1) ...
+#5 13.89 Setting up perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+#5 13.90 Setting up git-man (1:2.53.0-1ubuntu1.1) ...
+#5 13.92 Setting up libx11-6:amd64 (2:1.8.13-1ubuntu0.1) ...
+#5 13.93 Setting up netbase (6.5build1) ...
+#5 13.97 Setting up libfido2-1:amd64 (1.16.0-2build1) ...
+#5 13.98 Setting up libxmuu1:amd64 (2:1.1.3-4) ...
+#5 14.00 Setting up openssh-client (1:10.2p1-2ubuntu3.8) ...
+#5 14.17 Setting up libxext6:amd64 (2:1.3.4-1build3) ...
+#5 14.18 Setting up libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+#5 14.20 Setting up perl (5.40.1-7ubuntu0.3) ...
+#5 14.22 Setting up xauth (1:1.1.2-1.1build1) ...
+#5 14.24 Setting up liberror-perl (0.17030-1) ...
+#5 14.25 Setting up git (1:2.53.0-1ubuntu1.1) ...
+#5 14.28 Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+#5 DONE 14.5s
+
+#6 [3/6] WORKDIR /app
+#6 DONE 0.1s
+
+#7 [4/6] RUN git clone https://github.com/lmpnogueira/cogsi.git .
+#7 0.176 Cloning into '.'...
+#7 DONE 1.4s
+
+#8 [5/6] WORKDIR /app/build_tools/gradle_demo
+#8 DONE 0.1s
+
+#9 [6/6] RUN ./gradlew build --no-daemon
+#9 0.322 Downloading https://services.gradle.org/distributions/gradle-9.4.0-bin.zip
+#9 1.379 .............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+#9 22.45 
+#9 22.45 Welcome to Gradle 9.4.0!
+#9 22.45 
+#9 22.45 Here are the highlights of this release:
+#9 22.45  - Java 26 support
+#9 22.45  - Non-class-based JVM tests
+#9 22.45  - Enhanced console progress bar
+#9 22.45 
+#9 22.45 For more details see https://docs.gradle.org/9.4.0/release-notes.html
+#9 22.45 
+#9 22.46 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+#9 23.15 Daemon will be stopped at the end of the build 
+#9 24.05 Calculating task graph as no cached configuration is available for tasks: build
+#9 61.65 > Task :app:processTestResources NO-SOURCE
+#9 61.65 > Task :app:processResources
+#9 63.55 > Task :app:compileJava
+#9 63.55 > Task :app:classes
+#9 63.55 > Task :app:compileTestJava NO-SOURCE
+#9 63.55 > Task :app:testClasses UP-TO-DATE
+#9 63.55 > Task :app:test NO-SOURCE
+#9 63.55 > Task :app:check UP-TO-DATE
+#9 63.65 
+#9 63.65 > Task :app:jar
+#9 63.65 Generated application JAR: chat-server-1.0.jar
+#9 63.95 
+#9 63.95 > Task :app:startScripts
+#9 63.95 > Task :app:distTar
+#9 64.03 > Task :app:distZip
+#9 64.03 > Task :app:assemble
+#9 64.03 > Task :app:build
+#9 64.03 
+#9 64.03 BUILD SUCCESSFUL in 1m 3s
+#9 64.03 6 actionable tasks: 6 executed
+#9 64.03 Configuration cache entry stored.
+#9 DONE 64.3s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 14.2s done
+#10 exporting manifest sha256:89dd7aad232f0c8857cd42191938130ed4f5d78bde05c4277a3da4904e41a28a 0.0s done
+#10 exporting config sha256:63300b8295abcdb4f744e867642d159503bf278b60775630e6baeba1682ca506 0.0s done
+#10 exporting attestation manifest sha256:ba93b25ee2687783ba2efb87f7009c41ef58a19fc24aab5d40c459c13874f4fa 0.0s done
+#10 exporting manifest list sha256:97130c57e2a0f5974eb8594d6643c8d5375922c46be66b6a8a187f8c198aab07 0.0s done
+#10 naming to docker.io/library/chat:v1 done
+#10 unpacking to docker.io/library/chat:v1
+#10 unpacking to docker.io/library/chat:v1 3.2s done
+#10 DONE 17.5s
+
+real	1m39.040s
+user	0m0.218s
+sys	0m0.239s
+=== CHAT V2 ===
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :app:clean
+> Task :app:processTestResources NO-SOURCE
+> Task :app:processResources
+> Task :app:compileJava
+> Task :app:classes
+
+> Task :app:jar
+Generated application JAR: chat-server-1.0.jar
+
+> Task :app:compileTestJava
+> Task :app:testClasses
+> Task :app:startScripts
+> Task :app:distZip
+> Task :app:distTar
+> Task :app:assemble
+> Task :app:test
+> Task :app:check
+> Task :app:build
+
+BUILD SUCCESSFUL in 16s
+9 actionable tasks: 9 executed
+Configuration cache entry reused.
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v2
+#1 transferring dockerfile: 201B 0.0s done
+#1 DONE 0.0s
+
+#2 [auth] library/eclipse-temurin:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre
+#3 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 88B 0.0s done
+#4 DONE 0.0s
+
+#5 [1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:0b99b3376fbb50dbf9c0af8535fdd5b8eb0d3fdfc8b1e4967f383b6919f6901a
+#5 resolve docker.io/library/eclipse-temurin:21-jre@sha256:0b99b3376fbb50dbf9c0af8535fdd5b8eb0d3fdfc8b1e4967f383b6919f6901a 0.0s done
+#5 DONE 0.0s
+
+#6 [2/3] WORKDIR /app
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 9.70kB 0.7s done
+#7 DONE 0.8s
+
+#8 [3/3] COPY app/build/libs/*.jar app.jar
+#8 DONE 0.4s
+
+#9 exporting to image
+#9 exporting layers 0.1s done
+#9 exporting manifest sha256:bd0090814cebe69db4addc6df037c4630649392e3709b8944843b236fb9f3e77 0.0s done
+#9 exporting config sha256:72c77b0c00c157b202b90e6be22b65def28ffe13ecf5ed975d474d033d7e05c3
+#9 exporting config sha256:72c77b0c00c157b202b90e6be22b65def28ffe13ecf5ed975d474d033d7e05c3 0.0s done
+#9 exporting attestation manifest sha256:bc3b8a12c20faa9058e2031c859d53a86274bb7759e9f617658b045e84d41c81 0.0s done
+#9 exporting manifest list sha256:f00d6d860cb2e93e0284e5d62bc3ed83343945e6a7b2cdbd3cf71da52094b590 0.0s done
+#9 naming to docker.io/library/chat:v2 done
+#9 unpacking to docker.io/library/chat:v2 0.0s done
+#9 DONE 0.3s
+
+real	0m20.037s
+user	0m33.906s
+sys	0m4.839s
+=== CHAT V3 ===
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v3
+#1 transferring dockerfile: 423B 0.1s done
+#1 DONE 0.1s
+
+#2 [auth] library/gradle:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre
+#3 DONE 0.3s
+
+#4 [internal] load metadata for docker.io/library/gradle:jdk21
+#4 DONE 0.7s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 88B 0.0s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 DONE 0.0s
+
+#7 [stage-1 1/4] FROM docker.io/library/eclipse-temurin:21-jre@sha256:0b99b3376fbb50dbf9c0af8535fdd5b8eb0d3fdfc8b1e4967f383b6919f6901a
+#7 resolve docker.io/library/eclipse-temurin:21-jre@sha256:0b99b3376fbb50dbf9c0af8535fdd5b8eb0d3fdfc8b1e4967f383b6919f6901a 0.1s done
+#7 DONE 0.1s
+
+#8 [stage-1 2/4] WORKDIR /app
+#8 CACHED
+
+#9 [builder 1/4] FROM docker.io/library/gradle:jdk21@sha256:85f8f572045bfb31874d66d7d8a2bd0c17d8cb9ad34b6a4d02f5d552b4b92c04
+#9 resolve docker.io/library/gradle:jdk21@sha256:85f8f572045bfb31874d66d7d8a2bd0c17d8cb9ad34b6a4d02f5d552b4b92c04 0.1s done
+#9 DONE 0.1s
+
+#10 [builder 2/4] WORKDIR /workspace
+#10 CACHED
+
+#6 [internal] load build context
+#6 ...
+
+#11 [stage-1 3/4] RUN useradd -u 10001 appuser && chown -R appuser:appuser /app
+#11 DONE 0.9s
+
+#6 [internal] load build context
+#6 transferring context: 4.96MB 2.5s done
+#6 DONE 2.6s
+
+#12 [builder 3/4] COPY . .
+#12 DONE 0.1s
+
+#13 [builder 4/4] RUN ./gradlew :app:installDist --no-daemon
+#13 0.328 Downloading https://services.gradle.org/distributions/gradle-9.4.0-bin.zip
+#13 1.490 .............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+#13 22.00 
+#13 22.00 Welcome to Gradle 9.4.0!
+#13 22.00 
+#13 22.00 Here are the highlights of this release:
+#13 22.00  - Java 26 support
+#13 22.00  - Non-class-based JVM tests
+#13 22.00  - Enhanced console progress bar
+#13 22.00 
+#13 22.00 For more details see https://docs.gradle.org/9.4.0/release-notes.html
+#13 22.00 
+#13 22.10 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+#13 22.80 Daemon will be stopped at the end of the build 
+#13 23.80 Calculating task graph as no cached configuration is available for tasks: :app:installDist
+#13 30.00 > Task :app:processResources
+#13 31.10 > Task :app:compileJava
+#13 31.10 > Task :app:classes
+#13 31.10 
+#13 31.10 > Task :app:jar
+#13 31.10 Generated application JAR: chat-server-1.0.jar
+#13 31.38 
+#13 31.38 > Task :app:startScripts
+#13 31.38 > Task :app:installDist
+#13 31.38 
+#13 31.38 BUILD SUCCESSFUL in 31s
+#13 31.38 5 actionable tasks: 5 executed
+#13 31.38 Configuration cache entry stored.
+#13 DONE 31.6s
+
+#14 [stage-1 4/4] COPY --from=builder --chown=appuser:appuser /workspace/app/build/install/app /app
+#14 DONE 0.1s
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 exporting manifest sha256:066813617e53aca6f8c0fbfa8c3f71f53365154efa6c887f41fd9071d68b2872 0.0s done
+#15 exporting config sha256:213a3c2565ecc91c1bb4bc202cd7b4c414b578687d4a5dda7b650ddf2071907f 0.0s done
+#15 exporting attestation manifest sha256:232e2c68fcfa832157fdb3a415f413bd7fd86da9167a128f5c141984f8b72b0f 0.0s done
+#15 exporting manifest list sha256:fd23fb580de26e03320af0159baacc30af969c568c2436f57e692bedd880068b 0.0s done
+#15 naming to docker.io/library/chat:v3 done
+#15 unpacking to docker.io/library/chat:v3 0.1s done
+#15 DONE 0.3s
+
+real	0m36.413s
+user	0m0.300s
+sys	0m0.518s
+=== BOOKSTORE V1 ===
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v1
+#1 transferring dockerfile: 383B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:17-jdk
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 0.0s
+#3 transferring context: 2B 0.0s done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/library/eclipse-temurin:17-jdk@sha256:fe947d993c32dd9cf651a4353a6ed723c2370b3a9d034ea4cab4775404ea531a
+#4 resolve docker.io/library/eclipse-temurin:17-jdk@sha256:fe947d993c32dd9cf651a4353a6ed723c2370b3a9d034ea4cab4775404ea531a 0.0s done
+#4 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 39.39kB 3.7s done
+#5 DONE 3.8s
+
+#6 [2/7] RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+#6 0.271 Get:1 http://security.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+#6 0.299 Get:2 http://archive.ubuntu.com/ubuntu resolute InRelease [136 kB]
+#6 0.456 Get:3 http://security.ubuntu.com/ubuntu resolute-security/universe amd64 Packages [261 kB]
+#6 0.569 Get:4 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages [805 kB]
+#6 0.627 Get:5 http://archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+#6 0.701 Get:6 http://security.ubuntu.com/ubuntu resolute-security/multiverse amd64 Packages [24.6 kB]
+#6 0.703 Get:7 http://security.ubuntu.com/ubuntu resolute-security/restricted amd64 Packages [648 kB]
+#6 0.892 Get:8 http://archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+#6 1.122 Get:9 http://archive.ubuntu.com/ubuntu resolute/multiverse amd64 Packages [352 kB]
+#6 1.513 Get:10 http://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages [20.1 MB]
+#6 7.042 Get:11 http://archive.ubuntu.com/ubuntu resolute/restricted amd64 Packages [189 kB]
+#6 7.050 Get:12 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages [1,874 kB]
+#6 7.326 Get:13 http://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 Packages [475 kB]
+#6 7.529 Get:14 http://archive.ubuntu.com/ubuntu resolute-updates/restricted amd64 Packages [703 kB]
+#6 7.573 Get:15 http://archive.ubuntu.com/ubuntu resolute-updates/multiverse amd64 Packages [26.1 kB]
+#6 7.586 Get:16 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages [1,041 kB]
+#6 7.790 Get:17 http://archive.ubuntu.com/ubuntu resolute-backports/universe amd64 Packages [3,308 B]
+#6 7.826 Fetched 27.1 MB in 8s (3,535 kB/s)
+#6 7.826 Reading package lists...
+#6 8.364 Reading package lists...
+#6 8.908 Building dependency tree...
+#6 9.043 Reading state information...
+#6 9.081 Solving dependencies...
+#6 9.204 The following additional packages will be installed:
+#6 9.204   git-man less libcbor0.10 libcurl3t64-gnutls libedit2 liberror-perl
+#6 9.205   libfido2-1 libgdbm-compat4t64 libgdbm6t64 libperl5.40 libx11-6 libx11-data
+#6 9.205   libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1 netbase openssh-client patch
+#6 9.206   perl perl-modules-5.40 xauth
+#6 9.207 Suggested packages:
+#6 9.207   gettext-base git-doc git-email git-gui gitk gitweb git-cvs git-svn gdbm-l10n
+#6 9.207   keychain libpam-ssh monkeysphere ssh-askpass ed diffutils-doc perl-doc
+#6 9.207   libterm-readline-gnu-perl | libterm-readline-perl-perl make
+#6 9.207   libtap-harness-archive-perl
+#6 9.244 The following NEW packages will be installed:
+#6 9.244   git git-man less libcbor0.10 libcurl3t64-gnutls libedit2 liberror-perl
+#6 9.245   libfido2-1 libgdbm-compat4t64 libgdbm6t64 libperl5.40 libx11-6 libx11-data
+#6 9.245   libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1 netbase openssh-client patch
+#6 9.246   perl perl-modules-5.40 xauth
+#6 9.353 0 upgraded, 24 newly installed, 0 to remove and 10 not upgraded.
+#6 9.353 Need to get 16.6 MB of archives.
+#6 9.353 After this operation, 89.2 MB of additional disk space will be used.
+#6 9.353 Get:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 less amd64 668-1build1 [172 kB]
+#6 9.554 Get:2 http://archive.ubuntu.com/ubuntu resolute/main amd64 libedit2 amd64 3.1-20251016-1 [96.9 kB]
+#6 9.573 Get:3 http://archive.ubuntu.com/ubuntu resolute/main amd64 netbase all 6.5build1 [13.0 kB]
+#6 9.573 Get:4 http://archive.ubuntu.com/ubuntu resolute/main amd64 libcbor0.10 amd64 0.10.2-2ubuntu3 [25.3 kB]
+#6 9.578 Get:5 http://archive.ubuntu.com/ubuntu resolute/main amd64 libfido2-1 amd64 1.16.0-2build1 [84.6 kB]
+#6 9.596 Get:6 http://archive.ubuntu.com/ubuntu resolute/main amd64 libgdbm6t64 amd64 1.26-1build1 [36.5 kB]
+#6 9.605 Get:7 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxau6 amd64 1:1.0.11-1build2 [7,502 B]
+#6 9.605 Get:8 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxdmcp6 amd64 1:1.1.5-2 [10.8 kB]
+#6 9.608 Get:9 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb1 amd64 1.17.0-2ubuntu1 [49.0 kB]
+#6 9.617 Get:10 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libx11-data all 2:1.8.13-1ubuntu0.1 [115 kB]
+#6 9.640 Get:11 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libx11-6 amd64 2:1.8.13-1ubuntu0.1 [658 kB]
+#6 9.732 Get:12 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxext6 amd64 2:1.3.4-1build3 [30.8 kB]
+#6 9.737 Get:13 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxmuu1 amd64 2:1.1.3-4 [9,450 B]
+#6 9.737 Get:14 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 openssh-client amd64 1:10.2p1-2ubuntu3.8 [936 kB]
+#6 9.872 Get:15 http://archive.ubuntu.com/ubuntu resolute/main amd64 xauth amd64 1:1.1.2-1.1build1 [25.7 kB]
+#6 9.878 Get:16 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libcurl3t64-gnutls amd64 8.18.0-1ubuntu2.8 [421 kB]
+#6 9.936 Get:17 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-modules-5.40 all 5.40.1-7ubuntu0.3 [3,212 kB]
+#6 10.38 Get:18 http://archive.ubuntu.com/ubuntu resolute/main amd64 libgdbm-compat4t64 amd64 1.26-1build1 [6,796 B]
+#6 10.38 Get:19 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libperl5.40 amd64 5.40.1-7ubuntu0.3 [4,889 kB]
+#6 11.04 Get:20 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl amd64 5.40.1-7ubuntu0.3 [262 kB]
+#6 11.08 Get:21 http://archive.ubuntu.com/ubuntu resolute/main amd64 liberror-perl all 0.17030-1 [23.5 kB]
+#6 11.08 Get:22 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 git-man all 1:2.53.0-1ubuntu1.1 [1,197 kB]
+#6 11.26 Get:23 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 git amd64 1:2.53.0-1ubuntu1.1 [4,223 kB]
+#6 11.82 Get:24 http://archive.ubuntu.com/ubuntu resolute/main amd64 patch amd64 2.8-2build1 [95.7 kB]
+#6 11.94 debconf: unable to initialize frontend: Dialog
+#6 11.94 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 11.94 debconf: falling back to frontend: Readline
+#6 11.94 debconf: unable to initialize frontend: Readline
+#6 11.94 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 24.)
+#6 11.94 debconf: falling back to frontend: Teletype
+#6 11.95 debconf: unable to initialize frontend: Teletype
+#6 11.95 debconf: (This frontend requires a controlling tty.)
+#6 11.95 debconf: falling back to frontend: Noninteractive
+#6 12.53 Fetched 16.6 MB in 3s (6,444 kB/s)
+#6 12.56 Selecting previously unselected package less.
+#6 12.56 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10439 files and directories currently installed.)
+#6 12.56 Preparing to unpack .../00-less_668-1build1_amd64.deb ...
+#6 12.57 Unpacking less (668-1build1) ...
+#6 12.61 Selecting previously unselected package libedit2:amd64.
+#6 12.61 Preparing to unpack .../01-libedit2_3.1-20251016-1_amd64.deb ...
+#6 12.63 Unpacking libedit2:amd64 (3.1-20251016-1) ...
+#6 12.67 Selecting previously unselected package netbase.
+#6 12.67 Preparing to unpack .../02-netbase_6.5build1_all.deb ...
+#6 12.68 Unpacking netbase (6.5build1) ...
+#6 12.72 Selecting previously unselected package libcbor0.10:amd64.
+#6 12.72 Preparing to unpack .../03-libcbor0.10_0.10.2-2ubuntu3_amd64.deb ...
+#6 12.73 Unpacking libcbor0.10:amd64 (0.10.2-2ubuntu3) ...
+#6 12.77 Selecting previously unselected package libfido2-1:amd64.
+#6 12.77 Preparing to unpack .../04-libfido2-1_1.16.0-2build1_amd64.deb ...
+#6 12.77 Unpacking libfido2-1:amd64 (1.16.0-2build1) ...
+#6 12.81 Selecting previously unselected package libgdbm6t64:amd64.
+#6 12.81 Preparing to unpack .../05-libgdbm6t64_1.26-1build1_amd64.deb ...
+#6 12.82 Unpacking libgdbm6t64:amd64 (1.26-1build1) ...
+#6 12.85 Selecting previously unselected package libxau6:amd64.
+#6 12.85 Preparing to unpack .../06-libxau6_1%3a1.0.11-1build2_amd64.deb ...
+#6 12.86 Unpacking libxau6:amd64 (1:1.0.11-1build2) ...
+#6 12.90 Selecting previously unselected package libxdmcp6:amd64.
+#6 12.90 Preparing to unpack .../07-libxdmcp6_1%3a1.1.5-2_amd64.deb ...
+#6 12.90 Unpacking libxdmcp6:amd64 (1:1.1.5-2) ...
+#6 12.94 Selecting previously unselected package libxcb1:amd64.
+#6 12.94 Preparing to unpack .../08-libxcb1_1.17.0-2ubuntu1_amd64.deb ...
+#6 12.95 Unpacking libxcb1:amd64 (1.17.0-2ubuntu1) ...
+#6 12.98 Selecting previously unselected package libx11-data.
+#6 12.98 Preparing to unpack .../09-libx11-data_2%3a1.8.13-1ubuntu0.1_all.deb ...
+#6 12.99 Unpacking libx11-data (2:1.8.13-1ubuntu0.1) ...
+#6 13.04 Selecting previously unselected package libx11-6:amd64.
+#6 13.04 Preparing to unpack .../10-libx11-6_2%3a1.8.13-1ubuntu0.1_amd64.deb ...
+#6 13.05 Unpacking libx11-6:amd64 (2:1.8.13-1ubuntu0.1) ...
+#6 13.09 Selecting previously unselected package libxext6:amd64.
+#6 13.09 Preparing to unpack .../11-libxext6_2%3a1.3.4-1build3_amd64.deb ...
+#6 13.10 Unpacking libxext6:amd64 (2:1.3.4-1build3) ...
+#6 13.13 Selecting previously unselected package libxmuu1:amd64.
+#6 13.13 Preparing to unpack .../12-libxmuu1_2%3a1.1.3-4_amd64.deb ...
+#6 13.14 Unpacking libxmuu1:amd64 (2:1.1.3-4) ...
+#6 13.18 Selecting previously unselected package openssh-client.
+#6 13.18 Preparing to unpack .../13-openssh-client_1%3a10.2p1-2ubuntu3.8_amd64.deb ...
+#6 13.19 Unpacking openssh-client (1:10.2p1-2ubuntu3.8) ...
+#6 13.24 Selecting previously unselected package xauth.
+#6 13.24 Preparing to unpack .../14-xauth_1%3a1.1.2-1.1build1_amd64.deb ...
+#6 13.24 Unpacking xauth (1:1.1.2-1.1build1) ...
+#6 13.28 Selecting previously unselected package libcurl3t64-gnutls:amd64.
+#6 13.28 Preparing to unpack .../15-libcurl3t64-gnutls_8.18.0-1ubuntu2.8_amd64.deb ...
+#6 13.28 Unpacking libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.8) ...
+#6 13.32 Selecting previously unselected package perl-modules-5.40.
+#6 13.32 Preparing to unpack .../16-perl-modules-5.40_5.40.1-7ubuntu0.3_all.deb ...
+#6 13.33 Unpacking perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+#6 13.48 Selecting previously unselected package libgdbm-compat4t64:amd64.
+#6 13.48 Preparing to unpack .../17-libgdbm-compat4t64_1.26-1build1_amd64.deb ...
+#6 13.49 Unpacking libgdbm-compat4t64:amd64 (1.26-1build1) ...
+#6 13.53 Selecting previously unselected package libperl5.40:amd64.
+#6 13.53 Preparing to unpack .../18-libperl5.40_5.40.1-7ubuntu0.3_amd64.deb ...
+#6 13.54 Unpacking libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+#6 13.67 Selecting previously unselected package perl.
+#6 13.67 Preparing to unpack .../19-perl_5.40.1-7ubuntu0.3_amd64.deb ...
+#6 13.68 Unpacking perl (5.40.1-7ubuntu0.3) ...
+#6 13.72 Selecting previously unselected package liberror-perl.
+#6 13.72 Preparing to unpack .../20-liberror-perl_0.17030-1_all.deb ...
+#6 13.73 Unpacking liberror-perl (0.17030-1) ...
+#6 13.76 Selecting previously unselected package git-man.
+#6 13.76 Preparing to unpack .../21-git-man_1%3a2.53.0-1ubuntu1.1_all.deb ...
+#6 13.76 Unpacking git-man (1:2.53.0-1ubuntu1.1) ...
+#6 13.81 Selecting previously unselected package git.
+#6 13.81 Preparing to unpack .../22-git_1%3a2.53.0-1ubuntu1.1_amd64.deb ...
+#6 13.82 Unpacking git (1:2.53.0-1ubuntu1.1) ...
+#6 13.92 Selecting previously unselected package patch.
+#6 13.93 Preparing to unpack .../23-patch_2.8-2build1_amd64.deb ...
+#6 13.93 Unpacking patch (2.8-2build1) ...
+#6 13.97 Setting up libxau6:amd64 (1:1.0.11-1build2) ...
+#6 13.99 Setting up libxdmcp6:amd64 (1:1.1.5-2) ...
+#6 14.01 Setting up libxcb1:amd64 (1.17.0-2ubuntu1) ...
+#6 14.02 Setting up libgdbm6t64:amd64 (1.26-1build1) ...
+#6 14.04 Setting up libgdbm-compat4t64:amd64 (1.26-1build1) ...
+#6 14.06 Setting up libcbor0.10:amd64 (0.10.2-2ubuntu3) ...
+#6 14.08 Setting up libedit2:amd64 (3.1-20251016-1) ...
+#6 14.09 Setting up libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.8) ...
+#6 14.11 Setting up less (668-1build1) ...
+#6 14.13 Setting up libx11-data (2:1.8.13-1ubuntu0.1) ...
+#6 14.15 Setting up patch (2.8-2build1) ...
+#6 14.17 Setting up perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+#6 14.19 Setting up git-man (1:2.53.0-1ubuntu1.1) ...
+#6 14.20 Setting up libx11-6:amd64 (2:1.8.13-1ubuntu0.1) ...
+#6 14.22 Setting up netbase (6.5build1) ...
+#6 14.26 Setting up libfido2-1:amd64 (1.16.0-2build1) ...
+#6 14.28 Setting up libxmuu1:amd64 (2:1.1.3-4) ...
+#6 14.30 Setting up openssh-client (1:10.2p1-2ubuntu3.8) ...
+#6 14.46 Setting up libxext6:amd64 (2:1.3.4-1build3) ...
+#6 14.48 Setting up libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+#6 14.50 Setting up perl (5.40.1-7ubuntu0.3) ...
+#6 14.52 Setting up xauth (1:1.1.2-1.1build1) ...
+#6 14.54 Setting up liberror-perl (0.17030-1) ...
+#6 14.55 Setting up git (1:2.53.0-1ubuntu1.1) ...
+#6 14.58 Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+#6 DONE 14.7s
+
+#7 [3/7] WORKDIR /app
+#7 DONE 0.1s
+
+#8 [4/7] COPY .git /tmp/repo/.git
+#8 DONE 0.2s
+
+#9 [5/7] RUN git clone /tmp/repo/.git . && rm -rf /tmp/repo
+#9 0.187 Cloning into '.'...
+#9 1.384 done.
+#9 DONE 1.5s
+
+#10 [6/7] WORKDIR /app/CA1/part2
+#10 DONE 0.1s
+
+#11 [7/7] RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
+#11 0.234 Downloading https://services.gradle.org/distributions/gradle-8.14.3-bin.zip
+#11 1.223 .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%..............100%
+#11 20.34 
+#11 20.34 Welcome to Gradle 8.14.3!
+#11 20.34 
+#11 20.34 Here are the highlights of this release:
+#11 20.34  - Java 24 support
+#11 20.34  - GraalVM Native Image toolchain selection
+#11 20.34  - Enhancements to test reporting
+#11 20.34  - Build Authoring improvements
+#11 20.34 
+#11 20.34 For more details see https://docs.gradle.org/8.14.3/release-notes.html
+#11 20.34 
+#11 20.34 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+#11 21.14 Daemon will be stopped at the end of the build 
+#11 22.04 Calculating task graph as no cached configuration is available for tasks: bootJar
+#11 49.34 > Task :processResources
+#11 53.94 > Task :compileJava
+#11 53.94 > Task :classes
+#11 53.94 > Task :resolveMainClassName
+#11 55.04 > Task :bootJar
+#11 55.04 
+#11 55.04 BUILD SUCCESSFUL in 54s
+#11 55.04 4 actionable tasks: 4 executed
+#11 55.04 Configuration cache entry stored.
+#11 DONE 55.3s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 6.2s done
+#12 exporting manifest sha256:2ce8cff211ad4fcb83137325fa7411f9ff956bf437c80b346ae1c2686bb01290 0.0s done
+#12 exporting config sha256:6e9f47fc3d65a1d25b02d366d8a413317d8a8704f57d55735e1e99b3fba8bdd0 0.0s done
+#12 exporting attestation manifest sha256:73d184ac3aa6c6645c2f068147f3e4e38d320bbee53cef3d5ee3dd5519b15e7f 0.0s done
+#12 exporting manifest list sha256:7f2c36eeaf25c2f9a960bd9299c4e3687a87a636c4f07c32d73f35a54a683338 0.0s done
+#12 naming to docker.io/library/bookstore:v1
+#12 naming to docker.io/library/bookstore:v1 done
+#12 unpacking to docker.io/library/bookstore:v1
+#12 unpacking to docker.io/library/bookstore:v1 2.3s done
+#12 DONE 8.7s
+
+real	1m21.440s
+user	0m0.306s
+sys	0m0.603s
+=== BOOKSTORE V2 ===
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :clean
+> Task :processResources
+> Task :compileJava
+> Task :classes
+> Task :resolveMainClassName
+> Task :bootJar
+
+BUILD SUCCESSFUL in 12s
+5 actionable tasks: 5 executed
+Configuration cache entry reused.
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v2
+#1 transferring dockerfile: 157B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:17-jre
+#2 DONE 0.8s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 89B 0.1s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 ...
+
+#5 [1/3] FROM docker.io/library/eclipse-temurin:17-jre@sha256:2a996a534890f1bee252fab23a0c01e773e9e1dc0e4700e8f0f6a2697c6cbf76
+#5 resolve docker.io/library/eclipse-temurin:17-jre@sha256:2a996a534890f1bee252fab23a0c01e773e9e1dc0e4700e8f0f6a2697c6cbf76 0.0s done
+#5 DONE 0.0s
+
+#6 [2/3] WORKDIR /app
+#6 CACHED
+
+#4 [internal] load build context
+#4 transferring context: 51.47MB 1.6s done
+#4 DONE 1.6s
+
+#7 [3/3] COPY build/libs/*.jar app.jar
+#7 DONE 0.3s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 1.0s done
+#8 exporting manifest sha256:fb8b33fbc6b487a6cab016ed9424e4237e264f8fad32336bc6a4ef256275693b 0.0s done
+#8 exporting config sha256:d9a5d9da35551c930cf3d43ef316d37449f7cf29ac401756f61f9bbd4974567a 0.0s done
+#8 exporting attestation manifest sha256:c81eb7d8d0e5f2a7951096808bf3cae48e61d8957213475895679f7005461f15 0.0s done
+#8 exporting manifest list sha256:fc8001791fd0cec704fd0ff4d5723996e9d3d6048f9c827e09d2b52e3f84b76a 0.0s done
+#8 naming to docker.io/library/bookstore:v2
+#8 naming to docker.io/library/bookstore:v2 done
+#8 unpacking to docker.io/library/bookstore:v2
+#8 unpacking to docker.io/library/bookstore:v2 0.2s done
+#8 DONE 1.4s
+
+real	0m17.623s
+user	0m17.367s
+sys	0m3.011s
+=== BOOKSTORE V3 ===
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.v3
+#1 transferring dockerfile: 377B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/gradle:8-jdk17
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:17-jre
+#3 DONE 0.3s
+
+#2 [internal] load metadata for docker.io/library/gradle:8-jdk17
+#2 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 89B 0.0s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [stage-1 1/4] FROM docker.io/library/eclipse-temurin:17-jre@sha256:2a996a534890f1bee252fab23a0c01e773e9e1dc0e4700e8f0f6a2697c6cbf76
+#6 resolve docker.io/library/eclipse-temurin:17-jre@sha256:2a996a534890f1bee252fab23a0c01e773e9e1dc0e4700e8f0f6a2697c6cbf76 0.0s done
+#6 DONE 0.0s
+
+#7 [stage-1 2/4] WORKDIR /app
+#7 CACHED
+
+#8 [builder 1/4] FROM docker.io/library/gradle:8-jdk17@sha256:2f977f0a5b95ade2eabcfcf4840ff4b29fc176c61ee56fd184df038f64b18f9e
+#8 resolve docker.io/library/gradle:8-jdk17@sha256:2f977f0a5b95ade2eabcfcf4840ff4b29fc176c61ee56fd184df038f64b18f9e 0.0s done
+#8 DONE 0.0s
+
+#9 [builder 2/4] WORKDIR /workspace
+#9 CACHED
+
+#5 [internal] load build context
+#5 ...
+
+#10 [stage-1 3/4] RUN useradd -u 10001 appuser && chown -R appuser:appuser /app
+#10 DONE 0.3s
+
+#5 [internal] load build context
+#5 transferring context: 114.86kB 0.7s done
+#5 DONE 0.8s
+
+#11 [builder 3/4] COPY . .
+#11 DONE 0.1s
+
+#12 [builder 4/4] RUN ./gradlew bootJar --no-daemon
+#12 0.320 Downloading https://services.gradle.org/distributions/gradle-8.14.3-bin.zip
+#12 1.166 .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%..............100%
+#12 20.27 
+#12 20.27 Welcome to Gradle 8.14.3!
+#12 20.27 
+#12 20.27 Here are the highlights of this release:
+#12 20.27  - Java 24 support
+#12 20.27  - GraalVM Native Image toolchain selection
+#12 20.27  - Enhancements to test reporting
+#12 20.27  - Build Authoring improvements
+#12 20.27 
+#12 20.27 For more details see https://docs.gradle.org/8.14.3/release-notes.html
+#12 20.27 
+#12 20.27 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+#12 21.07 Daemon will be stopped at the end of the build 
+#12 21.97 Calculating task graph as no cached configuration is available for tasks: bootJar
+#12 50.67 > Task :processResources
+#12 56.96 > Task :compileJava
+#12 56.96 > Task :classes
+#12 56.96 > Task :resolveMainClassName
+#12 58.26 > Task :bootJar
+#12 58.26 
+#12 58.26 BUILD SUCCESSFUL in 57s
+#12 58.26 4 actionable tasks: 4 executed
+#12 58.26 Configuration cache entry stored.
+#12 DONE 58.6s
+
+#13 [stage-1 4/4] COPY --from=builder --chown=appuser:appuser /workspace/build/libs/*.jar app.jar
+#13 DONE 0.1s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 1.1s done
+#14 exporting manifest sha256:f38d7cadb045f688d673d10e5a8e7b2869015c95dcd68d858a9699b8409e4771 0.0s done
+#14 exporting config sha256:cf5936307c88c347fdb86e075087028c6f2ea67877398bdf8a571b5bdc98e6f5 0.0s done
+#14 exporting attestation manifest sha256:b2f097355367217b513758582ea155b7d0e7707b58b486b4d60951f81d71348a 0.0s done
+#14 exporting manifest list sha256:78c905e83b50a10f8209fcccb88009d0ce941eae80abc336d8138da56825f8d6 0.0s done
+#14 naming to docker.io/library/bookstore:v3
+#14 naming to docker.io/library/bookstore:v3 done
+#14 unpacking to docker.io/library/bookstore:v3
+#14 unpacking to docker.io/library/bookstore:v3 0.3s done
+#14 DONE 1.5s
+
+real	1m3.027s
+user	0m0.194s
+sys	0m0.247s

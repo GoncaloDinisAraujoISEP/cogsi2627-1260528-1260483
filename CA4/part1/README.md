@@ -389,24 +389,75 @@ CMD ["java", "-jar", "app.jar"]
 
 ---
 
+
 ## 4. Comparação e Métricas das Imagens
 
-Para analisar a eficácia da redução do tamanho e impacto da escolha de imagens de runtime:
+Para avaliar o impacto prático de cada estratégia de empacotamento, foram analisadas três variáveis fundamentais: **tempo de compilação sem cache (`--no-cache`)**, **contagem de camadas no histórico (`docker history`)** e **tamanho ocupado em disco (`docker images`)**.
 
-```bash
-docker images | grep -E "chat|bookstore"
-```
+### Tabela Comparativa de Métricas
 
-| Imagem | Versão | Tamanho em Disco (DISK USAGE) | Tamanho de Conteúdo (CONTENT SIZE) | Análise de Eficiência e Superfície de Segurança |
-| :--- | :--- | :--- | :--- | :--- |
-| `chat:v1` | v1 | ~2.1GB | ~800MB | Ineficiente: Inclui JDK integral, Git, dependências de compilação e corre como `root`. |
-| `chat:v2` | v2 | ~457MB | ~116MB | Otimizado: Imagem JRE minimalista. Depende do host para compilar. Corre como `root`. |
-| `chat:v3` | v3 | ~461MB | ~118MB | **Recomendado:** Multi-stage build reprodutível, JRE e utilizador não-root (`appuser`, UID 10001). |
-| `bookstore:v1` | v1 | ~1.38GB | ~492MB | Ineficiente: Histórico `.git`, dependências de build e JDK dentro da imagem. |
-| `bookstore:v2` | v2 | ~525MB | ~156MB | Otimizado: JRE 17 com fat JAR Spring Boot pré-compilado. Corre como `root`. |
-| `bookstore:v3` | v3 | ~525MB | ~156MB | **Recomendado:** Multi-stage build com Gradle, base JRE e utilizador desprivilegiado (`appuser`, UID 10001). |
+| Aplicação | Versão | Estratégia de Build | Tempo de Build (`real`) | Camadas (`docker history`) | Tamanho em Disco | Build Tools na Imagem Final? | Execução Non-Root? |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Chat Server** | `v1` | Monolítico (Clone + compilação interna) | 1m 39.04s | 24 | 2.10 GB | Sim (JDK, Gradle, Git, caches) | Não (`root`) |
+| **Chat Server** | `v2` | Host Build + JRE Runtime | 20.04s | 20 | 457 MB | Não (Apenas JRE base) | Não (`root`) |
+| **Chat Server** | `v3` | Multi-Stage Build + Non-Root | 36.41s | 22 | 461 MB | Não (Isoladas no builder) | Sim (`appuser` / `10001`) |
+| **Bookstore** | `v1` | Monolítico (Compilação interna via Gradle) | 1m 21.44s | 25 | 1.39 GB | Sim (JDK, Gradle, caches) | Não (`root`) |
+| **Bookstore** | `v2` | Host Build + JRE Runtime | 17.62s | 20 | 525 MB | Não (Apenas JRE base) | Não (`root`) |
+| **Bookstore** | `v3` | Multi-Stage Build + Non-Root | 1m 03.03s | 22 | 525 MB | Não (Isoladas no builder) | Sim (`appuser` / `10001`) |
 
-<img width="1385" height="372" alt="image" src="https://github.com/user-attachments/assets/0d17f21a-81ca-4c54-9d83-f6ad04679aff" />
+#### Justificação Técnica dos Resultados:
+1. **Redução da Pegada em Disco:**
+   * A versão `v1` inclui o ecossistema completo de desenvolvimento (`git`, SDKs e diretórios de cache), resultando em imagens de tamanho excessivo (1.39 GB e 2.10 GB).
+   * A transição para bases minimalistas focadas exclusivamente no runtime (`eclipse-temurin:17-jre` e `21-jre`) nas versões `v2` e `v3` gerou uma poupança imediata superior a 70% do espaço ocupado em disco.
+
+2. **Duração do Processo de Build vs. Portabilidade:**
+   * A versão `v2` apresenta o menor tempo de build (~17s a 20s), dado que o Docker se limita a executar a instrução `COPY` do binário já compilado no anfitrião. Contudo, quebra o isolamento ao exigir que o ambiente local tenha o JDK e Gradle configurados de raiz.
+   * A versão `v3` (*multi-stage build*) equilibra tempo e reprodutibilidade: o processo de build corre de forma estanque no estágio transitório (`builder`), copiando unicamente o artefacto estritamente necessário para a imagem final de entrega.
+
+3. **Análise de Camadas (`docker history`):**
+   * A contagem de camadas inclui metadados (`ENV`, `WORKDIR`, `EXPOSE`) e a hierarquia herdada da imagem base oficial.
+   * A versão `v3` regista 22 camadas (em contraste com as 20 camadas da `v2`) em consequência direta do endurecimento de segurança: a instrução de criação do utilizador local de sistema (`RUN useradd`) e a diretiva de execução desprivilegiada (`USER 10001`).
+
+---
+
+
+### 4.1 Inspeção Detalhada de Camadas (`docker history`)
+
+A inspeção detalhada das camadas evidencia de forma prática o desperdício de espaço no modelo tradicional face ao desacoplamento obtido no modelo *multi-stage*:
+
+#### Camadas da Versão v1 (Monolítica):
+Observa-se que apenas a instrução `./gradlew build` introduz 738 MB de dependências e artefactos desnecessários na imagem final:
+
+<!-- COLOCA AQUI O TEU PRINT DO COMANDO "docker history chat:v1" (onde se vê a linha dos 738MB) -->
+![Docker History Chat v1](docs/screenshots/docker-history-chat-v1.png)
+
+#### Camadas da Versão v3 (Multi-Stage):
+No estágio final, a camada que transporta a aplicação (`COPY --from=builder`) ocupa apenas 2.31 MB, sendo executada com restrições explícitas de utilizador (`USER 10001`):
+
+<!-- COLOCA AQUI O TEU PRINT DO COMANDO "docker history chat:v3" (onde se vê a linha dos 2.31MB e USER 10001) -->
+![Docker History Chat v3](docs/screenshots/docker-history-chat-v3.png)
+
+---
+
+### 4.2 Prova de Isolamento e Comunicação Host-Container
+
+Para comprovar que o contentor executa de forma autónoma e responde a pedidos originados a partir do exterior (sistema operativo anfitrião), o serviço `chat:v3` foi instanciado mapeando a porta de socket `59001`:
+
+1. O contentor foi iniciado em segundo plano com redirecionamento de porta:
+   ```bash
+   docker run -d --name chat-test -p 59001:59001 chat:v3
+   ```
+2. A partir do anfitrião, foi executado o cliente gráfico Java Swing:
+   ```bash
+   cd CA4/part1/chat && ./gradlew :app:runClient
+   ```
+3. Foram enviadas mensagens interativas pela aplicação, validando o ciclo de processamento do servidor dentro do contentor.
+
+<!-- COLOCA AQUI O TEU PRINT QUE TEM A JANELA "Chatter - Gonclao" E A TABELA docker stats POR TRÁS -->
+![Evidência de Execução e Monitorização](docs/screenshots/chat-client-stats.png)
+
+* **Monitorização em Tempo Real (`docker stats`):**
+  Como evidenciado na captura, o contentor opera com estabilidade e consumo de memória contido (~56.59 MiB), sendo a comunicação bidirecional confirmada pelo tráfego contínuo na interface de rede (`NET I/O: 2.04kB / 804B`).
 
 ---
 

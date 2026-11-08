@@ -10,4 +10,4 @@ WORKDIR /app/CA1/part2
 RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 
 EXPOSE 8080
-CMD ["java", "-jar", "build/libs/bookstore-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "build/libs/bookstore-1.0.0.jar"]

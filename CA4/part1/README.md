@@ -312,7 +312,10 @@ CMD ["java", "-jar", "app.jar"]
    docker stop bookstore-v2-app && docker rm bookstore-v2-app
    
    ```
-> **[INSERIR PRINT AQUI: Execução do comando `bootJar` e resposta HTTP do `bookstore:v2`]**
+<img width="1218" height="176" alt="image" src="https://github.com/user-attachments/assets/194fd616-236c-4f60-9b9f-6c619d326ea8" />
+<img width="1451" height="67" alt="image" src="https://github.com/user-attachments/assets/b64b97b1-3bab-4124-8d38-827087920ed5" />
+<img width="1045" height="113" alt="image" src="https://github.com/user-attachments/assets/a2bbe72d-ec40-4ddd-92ca-269df1d599fd" />
+
 
 ---
 

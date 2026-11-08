@@ -29,6 +29,16 @@ CA4/part1/
     └── settings.gradle
 ```
 
+### Configuração de Isolamento (.dockerignore)
+
+Ambas as aplicações incluem um ficheiro `.dockerignore` nas respetivas pastas para evitar o envio desnecessário de artefactos pesados e ficheiros sensíveis durante o contexto de build (`docker build`):
+
+* Exclusão de diretorias de build (`build/`, `.gradle/`, `target/`);
+
+* Exclusão de ficheiros de ambiente e chaves locais (`.env`, `*.log`, `.git/` nos contextos locais);
+
+* Redução direta do tempo de transferência de contexto para o daemon Docker.
+
 ---
 
 ## 2. Aplicação 1: Chat Server (Java 21)
@@ -182,6 +192,10 @@ CMD ["java", "-cp", "lib/*", "org.example.ChatServerApp", "59001"]
 
 A Bookstore é uma aplicação Spring Boot 3 que opera com Java 17 na porta HTTP `8080`.
 
+> **Nota de Segurança e Arquitetura (Injeção de Configurações):**
+> Para permitir que a aplicação execute em modo autónomo (stand-alone) na Parte 1 sem depender da infraestrutura de VMs legada (CA2/CA3), as variáveis de base de dados H2 em memória são injetadas dinamicamente em runtime através das flags `-e`.
+> Esta abordagem cumpre os princípios de *least privilege* e defesa em profundidade, evitando a instrução `ENV` no Dockerfile que deixaria credenciais estáticas gravadas permanentemente nas camadas públicas da imagem (`docker history`) ao publicar no Docker Hub.
+
 ---
 
 ### Versão 1: Clone do Repositório e Compilação (`Dockerfile.v1`)
@@ -200,7 +214,7 @@ WORKDIR /app/CA1/part2
 RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 
 EXPOSE 8080
-CMD ["java", "-jar", "build/libs/bookstore-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "build/libs/bookstore-1.0.0.jar"]
 ```
 
 #### Passos de Execução:
@@ -209,20 +223,33 @@ CMD ["java", "-jar", "build/libs/bookstore-0.0.1-SNAPSHOT.jar"]
    docker build -f CA4/part1/bookstore/Dockerfile.v1 -t bookstore:v1 .
    ```
 
-2. **Arrancar o contentor:**
-   ```bash
-   docker run -d --name bookstore-v1-app -p 8080:8080 bookstore:v1
-   docker ps
+2. **Arrancar o contentor com as variáveis de inicialização da base de dados H2:**
+
+   ```
+   docker run -d --name bookstore-v1-app -p 8080:8080 \
+     -e SPRING_DATASOURCE_URL="jdbc:h2:mem:bookstoredb;DB_CLOSE_DELAY=-1" \
+     -e SPRING_DATASOURCE_DRIVER_CLASS_NAME="org.h2.Driver" \
+     -e SPRING_DATASOURCE_USERNAME="sa" \
+     -e SPRING_DATASOURCE_PASSWORD="" \
+     -e SPRING_JPA_DATABASE_PLATFORM="org.hibernate.dialect.H2Dialect" \
+     bookstore:v1
+   
    ```
 
-3. **Verificar resposta HTTP no endpoint da aplicação:**
-   ```bash
-   curl -I http://localhost:8080/books
+3. **Aguardar a inicialização e verificar o estado e o endpoint HTTP:**
+
+   ```
+   sleep 8
+   docker ps
+   curl -I http://localhost:8080
+   
    ```
 
 4. **Limpar:**
-   ```bash
+
+   ```
    docker stop bookstore-v1-app && docker rm bookstore-v1-app
+   
    ```
 
 <img width="1412" height="237" alt="image" src="https://github.com/user-attachments/assets/c9fdaf37-eb9c-472d-8702-264c06154798" />
@@ -245,29 +272,46 @@ CMD ["java", "-jar", "app.jar"]
 ```
 
 #### Passos de Execução:
+
 1. **Gerar o pacote executável no ambiente do anfitrião:**
-   ```bash
+
+   ```
    cd CA4/part1/bookstore
    ./gradlew bootJar --no-daemon
    cd ../../..
+   
    ```
 
 2. **Construir a imagem com o JRE 17:**
-   ```bash
+
+   ```
    docker build -f CA4/part1/bookstore/Dockerfile.v2 -t bookstore:v2 CA4/part1/bookstore
+   
    ```
 
-3. **Arrancar e validar endpoint:**
-   ```bash
-   docker run -d --name bookstore-v2-app -p 8080:8080 bookstore:v2
-   curl -I http://localhost:8080/books
+3. **Arrancar o contentor com as variáveis de base de dados e validar:**
+
+   ```
+   docker run -d --name bookstore-v2-app -p 8080:8080 \
+     -e SPRING_DATASOURCE_URL="jdbc:h2:mem:bookstoredb;DB_CLOSE_DELAY=-1" \
+     -e SPRING_DATASOURCE_DRIVER_CLASS_NAME="org.h2.Driver" \
+     -e SPRING_DATASOURCE_USERNAME="sa" \
+     -e SPRING_DATASOURCE_PASSWORD="" \
+     -e SPRING_JPA_DATABASE_PLATFORM="org.hibernate.dialect.H2Dialect" \
+     bookstore:v2
+   
+   sleep 8
+   docker ps
+   curl -I http://localhost:8080
+   
    ```
 
 4. **Limpar:**
-   ```bash
-   docker stop bookstore-v2-app && docker rm bookstore-v2-app
-   ```
 
+   ```
+   docker stop bookstore-v2-app && docker rm bookstore-v2-app
+   
+   ```
 > **[INSERIR PRINT AQUI: Execução do comando `bootJar` e resposta HTTP do `bookstore:v2`]**
 
 ---
@@ -294,25 +338,42 @@ CMD ["java", "-jar", "app.jar"]
 ```
 
 #### Passos de Execução:
+
 1. **Construir a imagem segura via multi-stage:**
-   ```bash
+
+   ```
    docker build -f CA4/part1/bookstore/Dockerfile.v3 -t bookstore:v3 CA4/part1/bookstore
+   
    ```
 
-2. **Executar o contentor:**
-   ```bash
-   docker run -d --name bookstore-v3-app -p 8080:8080 bookstore:v3
+2. **Executar o contentor com as variáveis da base de dados:**
+
+   ```
+   docker run -d --name bookstore-v3-app -p 8080:8080 \
+     -e SPRING_DATASOURCE_URL="jdbc:h2:mem:bookstoredb;DB_CLOSE_DELAY=-1" \
+     -e SPRING_DATASOURCE_DRIVER_CLASS_NAME="org.h2.Driver" \
+     -e SPRING_DATASOURCE_USERNAME="sa" \
+     -e SPRING_DATASOURCE_PASSWORD="" \
+     -e SPRING_JPA_DATABASE_PLATFORM="org.hibernate.dialect.H2Dialect" \
+     bookstore:v3
+   
    ```
 
 3. **Verificar os dados servidos e os privilégios do processo:**
-   ```bash
-   curl -s http://localhost:8080/books | head -n 15
+
+   ```
+   sleep 8
+   curl -I http://localhost:8080
    docker top bookstore-v3-app
+   docker run --rm bookstore:v3 id
+   
    ```
 
 4. **Limpar:**
-   ```bash
+
+   ```
    docker stop bookstore-v3-app && docker rm bookstore-v3-app
+   
    ```
 
 > **[INSERIR PRINT AQUI: Resposta JSON obtida via `curl` e processo com UID 10001 demonstrado no `docker top`]**

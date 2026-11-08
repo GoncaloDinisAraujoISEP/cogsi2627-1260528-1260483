@@ -405,6 +405,19 @@ Para avaliar o impacto prático de cada estratégia de empacotamento, foram anal
 | **Bookstore** | `v2` | Host Build + JRE Runtime | 17.62s | 20 | 525 MB | Não (Apenas JRE base) | Não (`root`) |
 | **Bookstore** | `v3` | Multi-Stage Build + Non-Root | 1m 03.03s | 22 | 525 MB | Não (Isoladas no builder) | Sim (`appuser` / `10001`) |
 
+#### Evidências de Medição no Terminal:
+
+* **Medição de Tempos de Build sem Cache (`real`):**
+  <img width="973" height="233" alt="image" src="https://github.com/user-attachments/assets/1c292053-81ed-4808-bda1-83c5c59e4a6e" />
+
+
+* **Contagem de Camadas (`docker history`):**
+ <img width="1280" height="198" alt="image" src="https://github.com/user-attachments/assets/b8ab3e54-034c-4236-9d8f-880775997056" />
+
+
+* **Tamanhos Finais das Imagens em Disco (`docker images`):**
+   <img width="1000" height="317" alt="image" src="https://github.com/user-attachments/assets/d0665d6c-222e-4b7b-9e46-c648a96b19d9" />
+
 #### Justificação Técnica dos Resultados:
 1. **Redução da Pegada em Disco:**
    * A versão `v1` inclui o ecossistema completo de desenvolvimento (`git`, SDKs e diretórios de cache), resultando em imagens de tamanho excessivo (1.39 GB e 2.10 GB).

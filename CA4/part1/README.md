@@ -78,7 +78,8 @@ CMD ["./gradlew", "runServer", "--no-daemon"]
    docker stop chat-v1-app && docker rm chat-v1-app
    ```
 
-> **[INSERIR PRINT AQUI: Build da imagem `chat:v1`, arranque e verificação com `docker ps`]**
+<img width="1442" height="595" alt="image" src="https://github.com/user-attachments/assets/fd7c0a13-7278-48d8-9754-960affdbb522" />
+
 
 ---
 
@@ -121,7 +122,8 @@ CMD ["java", "-cp", "app.jar", "org.example.ChatServerApp", "59001"]
    docker stop chat-v2-app && docker rm chat-v2-app
    ```
 
-> **[INSERIR PRINT AQUI: Execução do build local do Gradle, `docker build` e contentor `chat:v2` a correr]**
+<img width="1430" height="721" alt="image" src="https://github.com/user-attachments/assets/82205ef3-e652-4c9e-a7ce-93862fcd1825" />
+
 
 ---
 
@@ -171,7 +173,8 @@ CMD ["java", "-cp", "lib/*", "org.example.ChatServerApp", "59001"]
    docker stop chat-v3-app && docker rm chat-v3-app
    ```
 
-> **[INSERIR PRINT AQUI: Saída do comando `docker top` (mostrando UID 10001) e `docker stats` da imagem `chat:v3`]**
+<img width="1447" height="147" alt="image" src="https://github.com/user-attachments/assets/7baa1239-f755-4438-8661-0ba58f919bfd" />
+
 
 ---
 
@@ -222,7 +225,9 @@ CMD ["java", "-jar", "build/libs/bookstore-0.0.1-SNAPSHOT.jar"]
    docker stop bookstore-v1-app && docker rm bookstore-v1-app
    ```
 
-> **[INSERIR PRINT AQUI: Build, arranque do contentor `bookstore:v1` e teste via `curl`]**
+<img width="1412" height="237" alt="image" src="https://github.com/user-attachments/assets/c9fdaf37-eb9c-472d-8702-264c06154798" />
+
+
 
 ---
 

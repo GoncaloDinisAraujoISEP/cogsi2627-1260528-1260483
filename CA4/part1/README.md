@@ -379,7 +379,9 @@ CMD ["java", "-jar", "app.jar"]
    
    ```
 
-> **[INSERIR PRINT AQUI: Resposta JSON obtida via `curl` e processo com UID 10001 demonstrado no `docker top`]**
+
+<img width="1440" height="716" alt="image" src="https://github.com/user-attachments/assets/852c902c-be76-41e1-adcc-2aa1c5cb6873" />
+
 
 ---
 
@@ -391,16 +393,16 @@ Para analisar a eficácia da redução do tamanho e impacto da escolha de imagen
 docker images | grep -E "chat|bookstore"
 ```
 
-| Imagem | Versão | Tamanho Aproximado | Análise de Eficiência e Segurança |
-| :--- | :--- | :--- | :--- |
-| `chat:v1` | v1 | ~950MB - 1.1GB | Ineficiente: Inclui JDK integral, Git, ficheiros temporários do sistema operativo e corre com permissões de `root`. |
-| `chat:v2` | v2 | ~300MB - 350MB | Eficiente em espaço (JRE). Depende da máquina de build do host para gerar o JAR. Corre como `root`. |
-| `chat:v3` | v3 | ~300MB - 350MB | **Abordagem recomendada:** Build reprodutível e isolado (multi-stage), runtime mínima (JRE) e sem permissões de root (`appuser`, UID 10001). |
-| `bookstore:v1` | v1 | ~900MB - 1GB | Ineficiente: Camada de clone do Git e cadeia completa de compilação em JDK. |
-| `bookstore:v2` | v2 | ~280MB - 320MB | Redução substancial empacotando apenas o fat JAR Spring Boot sobre JRE 17. |
-| `bookstore:v3` | v3 | ~280MB - 320MB | **Abordagem recomendada:** Construção multi-stage com Gradle e Spring Boot executando em ambiente não-privilegiado. |
+| Imagem | Versão | Tamanho em Disco (DISK USAGE) | Tamanho de Conteúdo (CONTENT SIZE) | Análise de Eficiência e Superfície de Segurança |
+| :--- | :--- | :--- | :--- | :--- |
+| `chat:v1` | v1 | ~2.1GB | ~800MB | Ineficiente: Inclui JDK integral, Git, dependências de compilação e corre como `root`. |
+| `chat:v2` | v2 | ~457MB | ~116MB | Otimizado: Imagem JRE minimalista. Depende do host para compilar. Corre como `root`. |
+| `chat:v3` | v3 | ~461MB | ~118MB | **Recomendado:** Multi-stage build reprodutível, JRE e utilizador não-root (`appuser`, UID 10001). |
+| `bookstore:v1` | v1 | ~1.38GB | ~492MB | Ineficiente: Histórico `.git`, dependências de build e JDK dentro da imagem. |
+| `bookstore:v2` | v2 | ~525MB | ~156MB | Otimizado: JRE 17 com fat JAR Spring Boot pré-compilado. Corre como `root`. |
+| `bookstore:v3` | v3 | ~525MB | ~156MB | **Recomendado:** Multi-stage build com Gradle, base JRE e utilizador desprivilegiado (`appuser`, UID 10001). |
 
-> **[INSERIR PRINT AQUI: Listagem comparativa de imagens com `docker images`]**
+<img width="1385" height="372" alt="image" src="https://github.com/user-attachments/assets/0d17f21a-81ca-4c54-9d83-f6ad04679aff" />
 
 ---
 

@@ -1,0 +1,61 @@
+---
+- name: Provision and Deploy Bookstore Container to Production VM
+  hosts: production
+  become: true
+  vars:
+    docker_image: "{{ docker_repo }}:{{ image_tag }}"
+    container_name: "bookstore-prod"
+    app_port: 8080
+
+  tasks:
+    - name: Update apt cache and install Docker prerequisites
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+
+    - name: Install Docker (docker.io)
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker service is started and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add vagrant user to docker group
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+    - name: Log into Docker Hub
+      command: docker login -u {{ docker_user }} -p {{ docker_pass }}
+      no_log: true
+
+    - name: Pull target Docker image from Docker Hub
+      command: docker pull {{ docker_image }}
+
+    - name: Stop and remove existing application container if present
+      shell: |
+        docker stop {{ container_name }} || true
+        docker rm {{ container_name }} || true
+
+    - name: Start new Bookstore container
+      command: >
+        docker run -d
+        --name {{ container_name }}
+        --restart unless-stopped
+        -p {{ app_port }}:8080
+        {{ docker_image }}
+
+    - name: Log out from Docker Hub
+      command: docker logout
+      ignore_errors: yes

@@ -80,7 +80,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                branch 'main'
+                anyOf { branch 'main'; branch 'ca5-part2' }
             }
             steps {
                 dir('CA5/part2') {
@@ -107,7 +107,7 @@ pipeline {
 
         stage('Health Check') {
             when {
-                branch 'main'
+                anyOf { branch 'main'; branch 'ca5-part2' }
             }
             steps {
                 sh '''

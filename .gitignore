@@ -206,3 +206,6 @@ silences*
 **/*.old**/build*/
 **/.gradle/
 **/data/*.db
+**/build*/
+**/.gradle/
+**/data/*.db

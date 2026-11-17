@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REPO = "goncalodinisaraujoisep/bookstore-ca5"
+        IMAGE_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('CA5/part2/bookstore') {
+                    sh './gradlew clean compileJava compileTestJava'
+                }
+            }
+        }
+
+        stage('Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        dir('CA5/part2/bookstore') {
+                            sh './gradlew test'
+                        }
+                    }
+                    post {
+                        always {
+                            junit 'CA5/part2/bookstore/build/test-results/test/*.xml'
+                        }
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        dir('CA5/part2/bookstore') {
+                            sh './gradlew integrationTest'
+                        }
+                    }
+                    post {
+                        always {
+                            junit 'CA5/part2/bookstore/build/test-results/integrationTest/*.xml'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Package & Archive') {
+            steps {
+                dir('CA5/part2/bookstore') {
+                    sh './gradlew bootJar'
+                }
+                archiveArtifacts artifacts: 'CA5/part2/bookstore/build/libs/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                dir('CA5/part2') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker build -t ${DOCKER_REPO}:${IMAGE_TAG} .
+                            docker push ${DOCKER_REPO}:${IMAGE_TAG}
+                            docker logout
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                dir('CA5/part2') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerhub-credentials',
+                            usernameVariable: 'DOCKER_USER',
+                            passwordVariable: 'DOCKER_PASS'
+                        ),
+                        sshUserPrivateKey(
+                            credentialsId: 'prod-vm-ssh-key',
+                            keyFileVariable: 'SSH_KEY_FILE'
+                        )
+                    ]) {
+                        sh '''
+                            ansible-playbook -i ansible/inventory.ini ansible/deploy.yml \
+                              --private-key="${SSH_KEY_FILE}" \
+                              -e "docker_repo=${DOCKER_REPO} image_tag=${IMAGE_TAG} docker_user=${DOCKER_USER} docker_pass=${DOCKER_PASS}"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Health Check') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh '''
+                    sleep 10
+                    curl -f http://192.168.56.30:8080/actuator/health || curl -f http://192.168.56.30:8080/
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) succeeded!"
+        }
+        failure {
+            echo "Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed!"
+        }
+    }
+}

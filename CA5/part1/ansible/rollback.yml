@@ -1,0 +1,64 @@
+---
+# Restores a stable version archived in Jenkins to the green VM.
+# Usage: ansible-playbook rollback.yml -e stable_version=stable-v1.12
+# Jenkins URL and credentials come from environment variables (never hardcoded):
+#   JENKINS_URL, JENKINS_USER, JENKINS_TOKEN
+- name: Roll back the green VM to a stable version
+  hosts: green
+  become: true
+  vars:
+    jenkins_url: "{{ lookup('env', 'JENKINS_URL') | regex_replace('/$', '') }}"
+    jenkins_job: ca5-part1
+    build_number: "{{ stable_version.split('.')[-1] }}"
+    artifact: "bookstore-{{ stable_version }}.jar"
+    local_jar: "/tmp/{{ artifact }}"
+
+  pre_tasks:
+    - name: Check the version identifier
+      ansible.builtin.assert:
+        that:
+          - stable_version is defined
+          - stable_version is match('^stable-v1\.[0-9]+$')
+          - jenkins_url | length > 0
+        fail_msg: "Use -e stable_version=stable-v1.<build> and set JENKINS_URL"
+
+    - name: Retrieve {{ artifact }} from Jenkins
+      ansible.builtin.get_url:
+        url: "{{ jenkins_url }}/job/{{ jenkins_job }}/{{ build_number }}/artifact/dist/{{ artifact }}"
+        dest: "{{ local_jar }}"
+        url_username: "{{ lookup('env', 'JENKINS_USER') }}"
+        url_password: "{{ lookup('env', 'JENKINS_TOKEN') }}"
+        force_basic_auth: true
+        mode: "0644"
+      delegate_to: localhost
+      become: false
+      run_once: true
+
+  tasks:
+    - name: Stop the running application (releases port 8080 and the H2 file lock)
+      ansible.builtin.systemd:
+        name: bookstore
+        state: stopped
+
+    - name: Copy the stable release
+      ansible.builtin.copy:
+        src: "{{ local_jar }}"
+        dest: "/opt/bookstore/releases/{{ artifact }}"
+        owner: bookstore
+        group: bookstore
+        mode: "0640"
+
+    - name: Make it the current release
+      ansible.builtin.file:
+        src: "/opt/bookstore/releases/{{ artifact }}"
+        dest: /opt/bookstore/app.jar
+        state: link
+        force: true
+
+    - name: Start the application
+      ansible.builtin.systemd:
+        name: bookstore
+        state: started
+
+    - name: Health check
+      ansible.builtin.include_tasks: tasks/healthcheck.yml

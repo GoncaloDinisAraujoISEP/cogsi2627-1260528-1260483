@@ -1,0 +1,27 @@
+---
+# Run by Vagrant (ansible_local) inside blue and green.
+- name: Provision blue and green
+  hosts: all
+  become: true
+  vars:
+    deploy_initial: false
+    initial_jar: /vagrant/ansible/files/app.jar
+  tasks:
+    - name: Authorize the CI deploy key for the vagrant user
+      ansible.posix.authorized_key:
+        user: vagrant
+        key: "{{ lookup('file', '/ca5-keys/ca5_key.pub') }}"
+
+    - name: Base setup (Java, user, directories, service)
+      ansible.builtin.import_tasks: tasks/base.yml
+
+    - name: Deploy the current version (blue only)
+      ansible.builtin.include_tasks: tasks/install_jar.yml
+      vars:
+        app_jar: "{{ initial_jar }}"
+        app_version: initial
+      when: deploy_initial | bool
+
+    - name: Health check (blue only)
+      ansible.builtin.include_tasks: tasks/healthcheck.yml
+      when: deploy_initial | bool

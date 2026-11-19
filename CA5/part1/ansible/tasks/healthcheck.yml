@@ -1,0 +1,17 @@
+---
+- name: Health check - actuator reports UP (includes the database)
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8080/actuator/health
+    return_content: true
+  register: health
+  until: health.status == 200 and (health.json | default({})).get('status', '') == 'UP'
+  retries: 24
+  delay: 5
+  failed_when: health.status != 200 or (health.json | default({})).get('status', '') != 'UP'
+
+- name: Health check - /books returns the book list
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8080/books
+    return_content: true
+  register: books
+  failed_when: books.status != 200 or 'title' not in (books.content | default(''))

@@ -1,0 +1,57 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-5.7.0
+
+# NOTE: If you generated this yaml from an unprivileged and rootless podman container on an SELinux
+# enabled system, check the podman generate kube man page for steps to follow to ensure that your pod/container
+# has the right permissions to access the volumes added.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2026-10-31T16:10:53Z"
+  labels:
+    app: ca4-part2-podman-db-1-pod
+  name: ca4-part2-podman-db-1-pod
+spec:
+  containers:
+  - env:
+    - name: H2_PASSWORD
+      value: BookstoreDb2026
+    - name: H2_USER
+      value: sa
+    image: docker.io/pbarbosa08/cogsi-ca4-db:1.0
+    name: ca4-part2-podman-db-1
+    securityContext: {}
+    volumeMounts:
+    - mountPath: /opt/h2-data
+      name: ca4-part2-podman-h2-data-pvc
+  - env:
+    - name: SPRING_DATASOURCE_PASSWORD
+      value: BookstoreDb2026
+    - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+      value: update
+    - name: SERVER_PORT
+      value: "8080"
+    - name: SPRING_DATASOURCE_URL
+      value: jdbc:h2:tcp://db:9092/bookstore
+    - name: SPRING_DATASOURCE_USERNAME
+      value: sa
+    image: docker.io/pbarbosa08/cogsi-ca4-web:1.0
+    name: ca4-part2-podman-web-1
+    securityContext: {}
+  - args:
+    - nginx
+    - -g
+    - daemon off;
+    image: docker.io/pbarbosa08/cogsi-ca4-proxy:1.0
+    name: ca4-part2-podman-proxy-1
+    ports:
+    - containerPort: 80
+      hostPort: 8081
+  volumes:
+  - name: ca4-part2-podman-h2-data-pvc
+    persistentVolumeClaim:
+      claimName: ca4-part2-podman-h2-data
+

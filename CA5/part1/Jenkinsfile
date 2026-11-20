@@ -21,7 +21,9 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        checkout scm
+        git branch: 'development',
+            credentialsId: 'github-pat',
+            url: 'https://github.com/GoncaloDinisAraujoISEP/cogsi2627-1260528-1260483.git'
       }
     }
 

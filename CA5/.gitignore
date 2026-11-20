@@ -1,0 +1,3 @@
+.vagrant/
+keys/ca5_key
+part1/ansible/files/app.jar

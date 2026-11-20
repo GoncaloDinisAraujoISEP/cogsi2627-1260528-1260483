@@ -1,0 +1,28 @@
+# Blue (active) and green (candidate) VMs. Ansible runs inside each VM
+# (ansible_local), because Ansible has no Windows control node.
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box_version = "202510.26.0"
+  config.vm.synced_folder "../keys", "/ca5-keys"
+
+  { "blue" => "192.168.56.21", "green" => "192.168.56.22" }.each do |name, ip|
+    config.vm.define name do |node|
+      node.vm.hostname = name
+      node.vm.network "private_network", ip: ip
+
+      node.vm.provider "virtualbox" do |vb|
+        vb.name   = "ca5-#{name}"
+        vb.cpus   = 1
+        vb.memory = 1536
+      end
+
+      node.vm.provision "ansible_local" do |ansible|
+        ansible.playbook = "ansible/provision.yml"
+        ansible.install_mode = "default"
+        ansible.compatibility_mode = "2.0"
+        # Only blue gets the current version at provisioning time
+        ansible.extra_vars = { deploy_initial: name == "blue" }
+      end
+    end
+  end
+end

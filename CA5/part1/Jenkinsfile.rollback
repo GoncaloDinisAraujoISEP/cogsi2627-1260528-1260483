@@ -1,0 +1,41 @@
+pipeline {
+  agent { label 'linux' }
+
+  parameters {
+    string(name: 'STABLE_VERSION', defaultValue: '', description: 'Version to restore on green, e.g. stable-v1.12')
+  }
+
+  options {
+    timestamps()
+  }
+
+  stages {
+    stage('Validate') {
+      steps {
+        script {
+          if (!(params.STABLE_VERSION ==~ /stable-v1\.\d+/)) {
+            error "STABLE_VERSION must look like stable-v1.<build number>"
+          }
+        }
+      }
+    }
+
+    stage('Rollback') {
+      steps {
+        withCredentials([
+          sshUserPrivateKey(credentialsId: 'green-ssh-key', keyFileVariable: 'SSH_KEY'),
+          usernamePassword(credentialsId: 'jenkins-api', usernameVariable: 'JENKINS_USER', passwordVariable: 'JENKINS_TOKEN')
+        ]) {
+          dir('CA5/part1/ansible') {
+            sh 'ansible-playbook rollback.yml --private-key "$SSH_KEY" -e stable_version="$STABLE_VERSION"'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success { echo "Rollback to ${params.STABLE_VERSION} completed and verified" }
+    failure { echo "Rollback to ${params.STABLE_VERSION} failed" }
+  }
+}

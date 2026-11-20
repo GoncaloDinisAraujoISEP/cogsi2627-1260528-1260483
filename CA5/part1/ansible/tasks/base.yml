@@ -1,0 +1,62 @@
+---
+- name: Install Java runtime and curl
+  ansible.builtin.apt:
+    name:
+      - openjdk-17-jre-headless
+      - curl
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create the bookstore service account
+  ansible.builtin.user:
+    name: bookstore
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: false
+
+- name: Create release and data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: bookstore
+    group: bookstore
+    mode: "0750"
+  loop:
+    - /opt/bookstore/releases
+    - /opt/bookstore/data
+
+- name: Application settings (H2 file database in the same VM)
+  ansible.builtin.copy:
+    dest: /etc/bookstore.env
+    mode: "0644"
+    content: |
+      SERVER_PORT=8080
+      SPRING_DATASOURCE_URL=jdbc:h2:file:/opt/bookstore/data/bookstore
+      SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+- name: systemd unit (runs the current release through the app.jar symlink)
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/bookstore.service
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=Bookstore Spring Boot application
+      After=network.target
+
+      [Service]
+      User=bookstore
+      Group=bookstore
+      WorkingDirectory=/opt/bookstore
+      EnvironmentFile=/etc/bookstore.env
+      ExecStart=/usr/bin/java -jar /opt/bookstore/app.jar
+      Restart=on-failure
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Enable the service
+  ansible.builtin.systemd:
+    name: bookstore
+    enabled: true
+    daemon_reload: true

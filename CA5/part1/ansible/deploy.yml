@@ -1,0 +1,20 @@
+---
+# Run by the Jenkins pipeline (Deploy stage) from the agent.
+- name: Deploy a new version to the green VM
+  hosts: green
+  become: true
+  pre_tasks:
+    - name: Check required variables
+      ansible.builtin.assert:
+        that:
+          - app_jar is defined
+          - app_version is defined
+  tasks:
+    - name: Base setup (idempotent, keeps green ready)
+      ansible.builtin.import_tasks: tasks/base.yml
+
+    - name: Install and start the new version
+      ansible.builtin.include_tasks: tasks/install_jar.yml
+
+    - name: Health check
+      ansible.builtin.include_tasks: tasks/healthcheck.yml

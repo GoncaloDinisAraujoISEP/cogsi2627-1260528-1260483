@@ -1,0 +1,99 @@
+pipeline {
+  agent { label 'linux' }
+
+  parameters {
+    booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Deploy the new version to the green VM')
+  }
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    timeout(time: 30, unit: 'MINUTES')
+  }
+
+  environment {
+    APP_DIR     = 'CA1/part2'
+    ANSIBLE_DIR = 'CA5/part1/ansible'
+    VERSION     = "stable-v1.${env.BUILD_NUMBER}"
+    GREEN_URL   = 'http://192.168.56.22:8080'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Assemble') {
+      steps {
+        dir(env.APP_DIR) {
+          sh 'chmod +x gradlew && ./gradlew clean bootJar --no-daemon'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        dir(env.APP_DIR) {
+          sh './gradlew test --no-daemon'
+        }
+      }
+      post {
+        always {
+          junit allowEmptyResults: true, testResults: "${env.APP_DIR}/build/test-results/test/*.xml"
+        }
+      }
+    }
+
+    stage('Archive') {
+      steps {
+        // Only reached when all previous stages passed, so the stable tag is safe
+        sh 'mkdir -p dist && cp "$APP_DIR/build/libs/bookstore-1.0.0.jar" "dist/bookstore-$VERSION.jar"'
+        archiveArtifacts artifacts: "dist/*.jar, ${env.APP_DIR}/build/reports/tests/test/**", fingerprint: true
+        script {
+          currentBuild.displayName = env.VERSION
+        }
+      }
+    }
+
+    stage('Deploy') {
+      when {
+        expression { params.DEPLOY }
+      }
+      steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'vm-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+          dir(env.ANSIBLE_DIR) {
+            sh 'ansible-playbook deploy.yml --private-key "$SSH_KEY" -e app_jar="$WORKSPACE/dist/bookstore-$VERSION.jar" -e app_version="$VERSION"'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        if (params.DEPLOY) {
+          // Deployment verification from outside the VM
+          sh '''
+            for i in $(seq 1 24); do
+              curl -fs "$GREEN_URL/actuator/health" | grep -q '"status":"UP"' && break
+              sleep 5
+            done
+            curl -fs "$GREEN_URL/actuator/health" | grep -q '"status":"UP"'
+            curl -fs "$GREEN_URL/books" | grep -q '"title"'
+          '''
+          echo "Deployment verification passed: ${env.VERSION} is healthy on ${env.GREEN_URL}"
+        }
+        echo "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} produced ${env.VERSION}"
+      }
+    }
+    unstable {
+      echo "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+    }
+    failure {
+      echo "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER} - no stable artifact was produced"
+    }
+  }
+}

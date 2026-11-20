@@ -1,0 +1,21 @@
+---
+# Inputs: app_jar (path on the Ansible control node), app_version
+- name: Copy release {{ app_version }}
+  ansible.builtin.copy:
+    src: "{{ app_jar }}"
+    dest: "/opt/bookstore/releases/bookstore-{{ app_version }}.jar"
+    owner: bookstore
+    group: bookstore
+    mode: "0640"
+
+- name: Make {{ app_version }} the current release
+  ansible.builtin.file:
+    src: "/opt/bookstore/releases/bookstore-{{ app_version }}.jar"
+    dest: /opt/bookstore/app.jar
+    state: link
+    force: true
+
+- name: Restart the application
+  ansible.builtin.systemd:
+    name: bookstore
+    state: restarted

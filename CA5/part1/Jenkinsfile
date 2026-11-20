@@ -62,7 +62,7 @@ pipeline {
         expression { params.DEPLOY }
       }
       steps {
-        withCredentials([sshUserPrivateKey(credentialsId: 'vm-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'green-ssh-key', keyFileVariable: 'SSH_KEY')]) {
           dir(env.ANSIBLE_DIR) {
             sh 'ansible-playbook deploy.yml --private-key "$SSH_KEY" -e app_jar="$WORKSPACE/dist/bookstore-$VERSION.jar" -e app_version="$VERSION"'
           }

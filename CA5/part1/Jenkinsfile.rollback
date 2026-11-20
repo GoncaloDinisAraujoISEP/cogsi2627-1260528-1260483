@@ -23,7 +23,7 @@ pipeline {
     stage('Rollback') {
       steps {
         withCredentials([
-          sshUserPrivateKey(credentialsId: 'vm-ssh-key', keyFileVariable: 'SSH_KEY'),
+          sshUserPrivateKey(credentialsId: 'green-ssh-key', keyFileVariable: 'SSH_KEY'),
           usernamePassword(credentialsId: 'jenkins-api', usernameVariable: 'JENKINS_USER', passwordVariable: 'JENKINS_TOKEN')
         ]) {
           dir('CA5/part1/ansible') {

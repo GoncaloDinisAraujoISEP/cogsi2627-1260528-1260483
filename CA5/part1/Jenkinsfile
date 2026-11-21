@@ -51,7 +51,7 @@ pipeline {
     stage('Archive') {
       steps {
         // Only reached when all previous stages passed, so the stable tag is safe
-        sh 'mkdir -p dist && cp "$APP_DIR/build/libs/bookstore-1.0.0.jar" "dist/bookstore-$VERSION.jar"'
+        sh 'rm -rf dist && mkdir -p dist && cp "$APP_DIR/build/libs/bookstore-1.0.0.jar" "dist/bookstore-$VERSION.jar"'
         archiveArtifacts artifacts: "dist/*.jar, ${env.APP_DIR}/build/reports/tests/test/**", fingerprint: true
         script {
           currentBuild.displayName = env.VERSION

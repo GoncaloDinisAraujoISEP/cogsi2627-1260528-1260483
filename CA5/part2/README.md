@@ -78,8 +78,8 @@ A pipeline foi configurada no Jenkins como um **Multibranch Pipeline** ligado ao
 4. **Deploy to Production (Ansible):** Executa o playbook `ansible/deploy.yml` contra o inventário `192.168.56.30`. O Ansible garante que o serviço Docker está ativo na VM, faz *pull* da imagem mais recente do Docker Hub, substitui qualquer contentor anterior e inicia a nova versão da Bookstore na porta `8080`.
 5. **Health Check:** Valida no final do *deploy* que a API responde com código HTTP `200 OK` no endpoint `/books`.
 
-> **[INSERIR PRINT 1: Configuração das Credenciais ou Pipeline Overview no Jenkins]**
-> *O que o print deve mostrar:* A página principal do projeto `bookstore-ca5-part2` no Jenkins, evidenciando o artefacto `bookstore-1.0.0.jar` arquivado e o gráfico *Test Result Trend* a verde sem falhas.
+<img width="2551" height="1039" alt="image" src="https://github.com/user-attachments/assets/ce8ebda9-4564-48d2-a30b-de863e411d49" />
+
 
 ---
 
@@ -122,8 +122,7 @@ Desta forma, o Ansible dentro do Jenkins comunica normalmente com `192.168.56.30
 ### 5.1. Execução Completa da Pipeline no Jenkins
 Após acionar o **Build Now** no Jenkins, todos os estágios da pipeline (Checkout, Build & Test, Docker Build & Push, Deploy to Production e Health Check) concluíram com sucesso (**Build #9** a verde).
 
-> **[INSERIR PRINT 2: Vista "Stages" do Jenkins com o Build #9 a verde]**
-> *O que o print deve mostrar:* O ecrã `Stages` do Jenkins (`bookstore-ca5-part2 / ca5-part2 / #9`) com todos os círculos de progresso marcados com visto verde (`✓`), demonstrando a conclusão bem-sucedida desde o checkout até ao deploy.
+<img width="2558" height="1087" alt="image" src="https://github.com/user-attachments/assets/f526153e-1f84-4f53-8a5d-7be6942cd0a1" />
 
 ### 5.2. Validação da Aplicação em Produção
 Para confirmar que o contentor da Bookstore foi efetivamente atualizado e iniciado na VM de produção pelo Ansible, acedeu-se ao endpoint `/books`, verificando a resposta JSON com os registos iniciais da base de dados:
@@ -132,8 +131,8 @@ Para confirmar que o contentor da Bookstore foi efetivamente atualizado e inicia
 curl http://localhost:8085/books   # (ou [http://192.168.56.30:8080/books](http://192.168.56.30:8080/books) em Linux)
 ```
 
-> **[INSERIR PRINT 3: Resposta JSON da API Bookstore no Browser ou Terminal]**
-> *O que o print deve mostrar:* O browser (ou terminal) a aceder a `localhost:8085/books` (ou `192.168.56.30:8080/books`) e a devolver a lista JSON dos livros (`[{"id":1,"title":"Clean Code",...},{"id":2,"title":"Effective Java",...}]`).
+<img width="1655" height="220" alt="image" src="https://github.com/user-attachments/assets/5476be81-7347-4c3c-8956-0a898e140cb3" />
+
 
 ### 5.3. Controlo de Versões e Tagging
 Por fim, validou-se que a árvore de trabalho do Git se encontrava limpa e publicou-se a *tag* oficial **`ca5-part2`** no repositório remoto antes da integração na branch `main`:
@@ -143,9 +142,6 @@ git status
 git tag -f ca5-part2
 git push -f origin refs/tags/ca5-part2
 ```
-
-> **[INSERIR PRINT 4: Terminal com `git status` limpo e `git tag` a listar `ca5-part2`]**
-> *O que o print deve mostrar:* A saída do terminal a confirmar `nothing to commit, working tree clean` e a listagem das tags do repositório incluindo `ca5-part2`.
 
 ---
 

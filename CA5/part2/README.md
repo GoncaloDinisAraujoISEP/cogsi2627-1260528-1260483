@@ -400,20 +400,20 @@ Para além dos requisitos base do guião, procurou-se tornar o arranque da infra
 ### 8.1. Overview do Projeto, Artefactos e Tendência de Testes
 Na página principal do projeto no Jenkins (`http://localhost:8080/job/bookstore-ca5-part2/`), confirma-se o sucesso da build `#9`, o arquivo dos artefactos (`bookstore-1.0.0.jar` e `Dockerfile`) e o gráfico **Test Result Trend** totalmente a verde sem falhas:
 
-> **[INSERIR PRINT 1 AQUI — Jenkins Overview]**
-> *Como tirar/colar:* Abrir `http://localhost:8080/job/bookstore-ca5-part2/job/ca5-part2/` (ou `main`), capturar o ecrã mostrando o **Last Successful Artifacts** e o gráfico **Test Result Trend** a verde, e arrastar a imagem diretamente para aqui no editor do GitHub.
+<img width="2551" height="1039" alt="image" src="https://github.com/user-attachments/assets/abfb873b-bea5-4cb6-a8c1-09ab2a3db340" />
+
 
 ### 8.2. Execução Completa dos Estágios (Build `#9`)
 Na vista **Stages**, verifica-se a passagem bem-sucedida de todos os estágios declarados no `Jenkinsfile` (Checkout, Build, Unit Tests & Integration Tests em paralelo, Package & Archive, Build & Push Docker Image, Deploy to Production e Health Check):
 
-> **[INSERIR PRINT 2 AQUI — Jenkins Stage View]**
-> *Como tirar/colar:* Na página da pipeline no Jenkins, capturar a tabela horizontal dos estágios (**Stage View**) mostrando todos os blocos a verde e os respetivos tempos de execução, e arrastar a imagem diretamente para aqui no editor do GitHub.
+<img width="2558" height="1087" alt="image" src="https://github.com/user-attachments/assets/b6b8cb69-7243-4d0c-a57a-d2b5815e2579" />
+
 
 ### 8.3. Imagem Publicada no Docker Hub
 Após o estágio `Build & Push Docker Image`, a imagem versionada fica disponível no repositório público `goncalodinisaraujoisep/bookstore-ca5`:
 
-> **[INSERIR PRINT 3 AQUI — Docker Hub Repository]**
-> *Como tirar/colar:* Abrir `https://hub.docker.com/r/goncalodinisaraujoisep/bookstore-ca5/tags` no browser, capturar o ecrã mostrando a tag gerada pela pipeline (ex.: `ca5-part2-9` / `main-...`), e arrastar a imagem diretamente para aqui no editor do GitHub.
+<img width="1908" height="935" alt="image" src="https://github.com/user-attachments/assets/21b26d64-867d-41df-be1b-0494f8de8b68" />
+
 
 ### 8.4. Validação da Aplicação em Produção
 Após o Ansible lançar o contentor `bookstore-prod` na VM `192.168.56.30`, validou-se a resposta da API REST no endpoint `/books`:

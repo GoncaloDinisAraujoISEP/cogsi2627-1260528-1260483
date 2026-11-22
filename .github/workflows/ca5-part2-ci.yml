@@ -1,0 +1,70 @@
+name: CA5 Part 2 - Alternative CI Pipeline (GitHub Actions)
+
+on:
+  push:
+    branches: [ main, ca5-part2 ]
+    paths:
+      - 'CA5/part2/**'
+      - '.github/workflows/ca5-part2-ci.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Compile Java and Tests
+        working-directory: CA5/part2/bookstore
+        run: chmod +x gradlew && ./gradlew clean compileJava compileTestJava
+
+  unit-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run Unit Tests
+        working-directory: CA5/part2/bookstore
+        run: chmod +x gradlew && ./gradlew test
+
+  integration-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run Integration Tests
+        working-directory: CA5/part2/bookstore
+        run: chmod +x gradlew && ./gradlew integrationTest
+
+  package-and-docker-build:
+    needs: [unit-tests, integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Package JAR
+        working-directory: CA5/part2/bookstore
+        run: chmod +x gradlew && ./gradlew bootJar
+      - name: Upload JAR and Dockerfile Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bookstore-ca5-part2-artifacts
+          path: |
+            CA5/part2/bookstore/build/libs/*.jar
+            CA5/part2/Dockerfile
+      - name: Build Docker Image
+        working-directory: CA5/part2
+        run: docker build -t goncalodinisaraujoisep/bookstore-ca5:gha-${{ github.run_number }} .

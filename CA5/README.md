@@ -6,5 +6,5 @@ Relatório técnico da Class Assignment 5 (COGSI / MEI / ISEP).
 - [`alternative/`](./alternative/README.md) — Análise e Implementação da Solução Alternativa (GitHub Actions).
 
 ## Autoavaliação (0 – 100%)
-- **1260528:** %
-- **1260483:** %
+- **1260528:** 50%
+- **1260483:** 50%

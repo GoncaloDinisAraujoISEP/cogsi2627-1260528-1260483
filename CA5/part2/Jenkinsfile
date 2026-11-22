@@ -55,7 +55,7 @@ pipeline {
                 dir('CA5/part2/bookstore') {
                     sh './gradlew bootJar'
                 }
-                archiveArtifacts artifacts: 'CA5/part2/bookstore/build/libs/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'CA5/part2/bookstore/build/libs/*.jar, CA5/part2/Dockerfile', fingerprint: true
             }
         }
 
@@ -80,7 +80,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                anyOf { branch 'main'; branch 'ca5-part2' }
+                branch 'main'
             }
             steps {
                 dir('CA5/part2') {
@@ -107,7 +107,7 @@ pipeline {
 
         stage('Health Check') {
             when {
-                anyOf { branch 'main'; branch 'ca5-part2' }
+                branch 'main'
             }
             steps {
                 sh '''

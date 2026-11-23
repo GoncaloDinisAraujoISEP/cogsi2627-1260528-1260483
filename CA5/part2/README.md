@@ -408,6 +408,11 @@ Na vista **Stages**, verifica-se a passagem bem-sucedida de todos os estágios d
 
 <img width="2558" height="1087" alt="image" src="https://github.com/user-attachments/assets/b6b8cb69-7243-4d0c-a57a-d2b5815e2579" />
 
+Após aplicar a restrição condicional `when { branch 'main' }` no `Jenkinsfile`, confirma-se nas builds `#10` e `#11` da branch `ca5-part2` que os estágios de compilação, testes paralelos, empacotamento e *push* da imagem continuam a executar com sucesso, enquanto os estágios **Deploy to Production** e **Health Check** são automaticamente ignorados (`>>`):
+
+<img width="1903" height="467" alt="image" src="https://github.com/user-attachments/assets/aa9666c4-f09a-4066-9293-ab0c23e3e74a" />
+
+
 
 ### 8.3. Imagem Publicada no Docker Hub
 Após o estágio `Build & Push Docker Image`, a imagem versionada fica disponível no repositório público `goncalodinisaraujoisep/bookstore-ca5`:
@@ -428,8 +433,8 @@ curl [http://192.168.56.30:8080/books](http://192.168.56.30:8080/books)
 
 A aplicação devolveu o JSON com os registos iniciais da base de dados (`Clean Code` e `Effective Java`):
 
-> **[INSERIR PRINT 4 AQUI — Resposta JSON da API Bookstore]**
-> *Como tirar/colar:* Abrir `http://localhost:8085/books` no browser (ou correr `curl http://localhost:8085/books` no terminal), capturar o ecrã mostrando a resposta JSON com os livros, e arrastar a imagem diretamente para aqui no editor do GitHub.
+<img width="1250" height="129" alt="image" src="https://github.com/user-attachments/assets/a6d470d5-5b97-4d2d-a6e3-aa1a9b0be2e7" />
+
 
 ---
 

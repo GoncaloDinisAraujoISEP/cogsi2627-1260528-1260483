@@ -20,7 +20,7 @@ O objetivo desta segunda parte do **CA5** é eliminar todo o trabalho manual de 
 |  4. Package       -> ./gradlew bootJar + Archive (.jar & Dockerfile)  |
 |  5. Docker Push   -> goncalodinisaraujoisep/bookstore-ca5:<branch-#>  |
 |  6. Deploy (main) -> ansible-playbook (SSH -> 192.168.56.30)          |
-|  7. Health Check  -> curl [http://192.168.56.30:8080/actuator/health](http://192.168.56.30:8080/actuator/health)   |
+|  7. Health Check  -> curl http://192.168.56.30:8080/actuator/health   |
 +-----------------------------------+-----------------------------------+
                                     | SSH (chave privada) + Ansible
                                     v
